@@ -1,0 +1,28 @@
+[spidermonkey off] JavaScript-C128.14.0, 160.4 ms to start, RSS 16.1 MB
+[spidermonkey off] bulk.js: 781.7 ms, RSS 24.3 MB
+[spidermonkey off] workload.js: 66.7 ms, RSS 24.6 MB
+[spidermonkey off] sprites      100: p50   22.91 ms  p95   23.00  max   23.92 | RSS peak   24.8 MB | gc 0, 0.0 ms
+[spidermonkey off] sprites      400: p50   91.33 ms  p95   91.68  max   93.90 | RSS peak   24.9 MB | gc 0, 0.0 ms
+[spidermonkey off] sprites     1600: p50  366.39 ms  p95  368.26  max  370.04 | RSS peak   25.4 MB | gc 0, 0.0 ms
+[spidermonkey off] particles    250: p50   44.31 ms  p95   51.58  max   53.79 | RSS peak   25.5 MB | gc 0, 0.0 ms
+[spidermonkey off] particles   1000: p50  181.96 ms  p95  185.54  max  188.82 | RSS peak   25.7 MB | gc 1, 3.5 ms
+[spidermonkey off] particles   4000: p50  732.24 ms  p95  737.00  max  738.87 | RSS peak   26.4 MB | gc 4, 13.2 ms
+[spidermonkey off] platformer    10: p50   22.65 ms  p95   23.65  max   24.65 | RSS peak   30.1 MB | gc 1, 4.3 ms
+[spidermonkey off] platformer    50: p50   38.21 ms  p95   39.95  max   40.43 | RSS peak   34.0 MB | gc 3, 4.5 ms
+[spidermonkey off] platformer   200: p50   97.97 ms  p95   99.87  max  102.95 | RSS peak   38.1 MB | gc 13, 6.0 ms
+[spidermonkey off] shooter      100: p50   22.82 ms  p95   27.70  max   28.41 | RSS peak   38.4 MB | gc 1, 1.0 ms
+[spidermonkey off] shooter      400: p50  107.51 ms  p95  108.61  max  109.98 | RSS peak   39.8 MB | gc 1, 1.1 ms
+[spidermonkey off] shooter     1600: p50  440.72 ms  p95  444.36  max  449.71 | RSS peak   40.7 MB | gc 5, 34.4 ms
+[spidermonkey off] puzzle        64: p50   15.14 ms  p95   19.78  max   21.64 | RSS peak   40.8 MB | gc 1, 1.7 ms
+[spidermonkey off] puzzle       256: p50   60.69 ms  p95   82.52  max   87.34 | RSS peak   41.3 MB | gc 1, 4.3 ms
+[spidermonkey off] puzzle      1024: p50  243.77 ms  p95  344.34  max  349.12 | RSS peak   42.3 MB | gc 3, 10.5 ms
+[spidermonkey off] swarm         50: p50   18.52 ms  p95   18.87  max   22.56 | RSS peak   42.8 MB | gc 1, 3.5 ms
+[spidermonkey off] swarm        200: p50   83.54 ms  p95   85.70  max   89.46 | RSS peak   44.7 MB | gc 1, 6.5 ms
+[spidermonkey off] swarm        500: p50  264.52 ms  p95  268.98  max  272.51 | RSS peak   46.3 MB | gc 5, 18.9 ms
+[spidermonkey off] vector         3: p50  165.91 ms  p95  166.91  max  169.20 | RSS peak   46.4 MB | gc 20, 6.8 ms
+[spidermonkey off] vector        12: p50  662.95 ms  p95  666.80  max  678.25 | RSS peak   46.3 MB | gc 87, 24.8 ms
+[spidermonkey off] vector        48: p50 2647.72 ms  p95 2657.88  max 2907.70 | RSS peak   49.2 MB | gc 348, 109.0 ms
+[spidermonkey off] ui             5: p50   23.34 ms  p95   24.20  max   25.07 | RSS peak   49.4 MB | gc 5, 2.5 ms
+[spidermonkey off] ui            20: p50   82.84 ms  p95   85.25  max   86.66 | RSS peak   51.2 MB | gc 4, 3.8 ms
+[spidermonkey off] ui            80: p50  322.53 ms  p95  332.57  max  333.91 | RSS peak   55.7 MB | gc 24, 71.0 ms
+report: results/sm-interp.json

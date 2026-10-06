@@ -1,0 +1,224 @@
+# The transformation table for tools/vendor/expo-gl.sh.
+#
+# This file is the answer to "what did we change about expo-gl?" without
+# diffing 470 KB. Nothing else transforms the import: the script reads only
+# this table, and the output tree is never hand-edited.
+#
+# Format -- four `|`-separated fields, padding ignored:
+#
+#   kind     | from                  | to                    | why
+#
+#   file     | upstream name         | output name           | rewritten with every `sub` below
+#   verbatim | upstream name         | output name           | copied byte-for-byte, no `sub` applied
+#   seam     | upstream name         | output name           | replaced wholesale by tools/vendor/seam/<to>
+#   skip     | upstream name         | -                     | not imported at all
+#   sub      | perl regex            | replacement           | applied to every `file`, in table order
+#   patch    | perl regex            | replacement           | a `sub` that must match exactly once in the whole import
+#   allow    | perl regex            | -                     | token verify.sh must not flag
+#
+# A `sub` that matches nothing does nothing, which is right for a rename and for
+# the fallback rules below. It is wrong for a behaviour change: if upstream
+# reshapes the code a fix targets, the fix silently falls away and the import
+# still succeeds. Those rows are `patch`, and the import stops unless each
+# matches exactly once. VENDOR.md lists them.
+#
+# `sub` and `patch` patterns are perl regexes run over the whole file at once with /gm, so
+# `^` and `$` are line anchors and a pattern may span lines. Replacements may use
+# \n, \t and $1..$9, and nothing else -- this table cannot run code.
+#
+# No field may contain a literal `|`; the row is split on it.
+
+
+# ---- files: what comes across, and under what name ---------------------------
+#
+# The EX prefix becomes SK in file names for the same reason it does in symbols:
+# a grep for EXGL in this repo should find nothing.
+
+file     | pch.h                     | pch.h                     | the precompiled header; its GL includes are the EAGL trap
+file     | EXTypedArrayApi.h         | SKTypedArrayApi.h         | zero-copy typed arrays -- the reason this import exists at all
+file     | EXTypedArrayApi.cpp       | SKTypedArrayApi.cpp       |
+file     | EXJsiUtils.h              | SKJsiUtils.h              | JSI helpers: PropNameID cache, host function plumbing
+file     | EXJsiArgsTransform.h      | SKJsiArgsTransform.h      | JS value -> GL argument unpacking
+file     | EXGLNativeContext.h       | SKGLNativeContext.h       | the batch queue and object map. NOT context management: it owns no drawable
+file     | EXGLNativeContext.cpp     | SKGLNativeContext.cpp     |
+file     | EXGLImageUtils.h          | SKGLImageUtils.h          | so texImage2D from an image works without a second import pass
+file     | EXGLImageUtils.cpp        | SKGLImageUtils.cpp        |
+file     | EXWebGLRenderer.h         | SKWebGLRenderer.h         | the WebGL object model: constructors, constants, prototypes
+file     | EXWebGLRenderer.cpp       | SKWebGLRenderer.cpp       |
+file     | EXWebGLMethods.h          | SKWebGLMethods.h          |
+file     | EXWebGLMethods.cpp        | SKWebGLMethods.cpp        |
+file     | EXWebGLMethodsDraw.cpp    | SKWebGLMethodsDraw.cpp    |
+file     | EXWebGLMethodsTextures.cpp | SKWebGLMethodsTextures.cpp |
+file     | EXWebGLMethodsHelpers.h   | SKWebGLMethodsHelpers.h   |
+file     | EXWebGLMethodsMacros.h    | SKWebGLMethodsMacros.h    |
+file     | EXWebGLMethods.def        | SKWebGLMethods.def        | the method table
+file     | EXWebGLConstants.def      | SKWebGLConstants.def      | the constant table
+
+verbatim | stb_image.h               | stb_image.h               | public domain, not expo's, and carries no EX symbols -- rewriting it would only create a diff to review
+
+seam     | EXPlatformUtils.h         | SKPlatformUtils.h         | EXiOSLog is implemented outside common/; the macro lands on screenkit::log instead
+seam     | EXGLNativeApi.h           | SKGLTypes.h               | only the two id typedefs are kept; expo's C context API is left behind
+seam     | EXGLContextManager.h      | SKGLContextSeam.h         | the id -> context lookup is declared, not imported: GlSurface owns context lifetime
+
+skip     | EXGLContextManager.cpp    | -                         | expo's global context registry -- the half of expo-gl we deliberately do not take
+skip     | EXGLNativeApi.cpp         | -                         | the C entry points expo's ObjC/Java layer calls into that registry
+
+
+# ---- includes: rewritten first, so the prefix rules below cannot rename them --
+
+sub      | #include "EXGLNativeApi\.h" | #include "SKGLTypes.h"  | seam, not a rename
+sub      | #include "EXGLContextManager\.h" | #include "SKGLContextSeam.h" | seam, not a rename
+
+
+# ---- the EAGL trap -----------------------------------------------------------
+#
+# pch.h's platform branch is the single most expensive thing to get wrong in
+# this import: under __APPLE__ upstream reaches for Apple's deprecated EAGL
+# GLES, not ANGLE, and that compiles cleanly before fighting ANGLE at link or
+# run time. ANGLE spells the same API the way upstream already spells it on
+# Android, so both branches collapse onto one unconditional include -- ANGLE is
+# the GL on every ScreenKit target (Architecture.md 9), so there is nothing to
+# branch on.
+#
+# The block rule is deliberately exact. If upstream reorders those lines it
+# stops matching, the per-line rules below catch the individual includes, and
+# anything still standing fails verify.sh rather than passing silently.
+
+sub | ^#ifdef __ANDROID__\n+#include <GLES3/gl3\.h>\n#include <GLES3/gl3ext\.h>\n+#endif\n#ifdef __APPLE__\n#include <OpenGLES/EAGL\.h>\n#include <OpenGLES/ES3/gl\.h>\n#include <OpenGLES/ES3/glext\.h>\n#endif$ | // ANGLE is the GL on every ScreenKit target (Architecture.md 9), so there is\n// no platform branch here: <GLES3/gl3.h> is ANGLE's spelling everywhere, and\n// <GLES2/gl2ext.h> -- which must follow it -- is where ANGLE keeps the EXT enums\n// upstream reads out of <GLES3/gl3ext.h>, a header ANGLE does not ship.\n#include <GLES3/gl3.h>\n#include <GLES2/gl2ext.h> | collapse pch.h's platform branch onto ANGLE
+
+sub | ^#include <OpenGLES/EAGL\.h>\n | | EAGL is Apple's context API; ours is EGL, via GlSurface
+sub | ^#include <OpenGLES/ES3/glext\.h>\n | | superseded by <GLES2/gl2ext.h>
+sub | ^#include <OpenGLES/ES3/gl\.h>$ | #include <GLES3/gl3.h> | same API, ANGLE's spelling
+sub | ^#include <GLES3/gl3ext\.h>$ | #include <GLES2/gl2ext.h> | ANGLE ships no GLES3/gl3ext.h; the EXT enums live in GLES2/gl2ext.h
+
+
+# ---- namespace ---------------------------------------------------------------
+#
+# expo::gl_cpp -> screenkit::gl. Both the opening lines and the trailing
+# `} // namespace ...` comments, or the file reads as a lie.
+
+sub      | ^namespace expo \{$      | namespace screenkit {     |
+sub      | ^namespace gl_cpp \{$    | namespace gl {            |
+sub      | ^\} // namespace gl_cpp$ | }  // namespace gl        | two spaces before // is this repo's style
+sub      | ^\} // namespace expo$   | }  // namespace screenkit |
+sub      | \bexpo::gl_cpp\b         | screenkit::gl             | qualified uses
+sub      | \bgl_cpp::               | gl::                      | any residual qualification
+
+
+# ---- the EX prefix -----------------------------------------------------------
+#
+# Anchored at a word boundary and spelled out per family rather than a blanket
+# s/EX/SK/, which would quietly corrupt GL_EXT_* extension names.
+
+sub      | \bEXGL                   | SKGL                      | EXGLContext, EXGLContextId, EXGLSysLog, ...
+sub      | __EXGL                   | __SKGL                    | the __EXGLContexts / __EXGLPrototypeReady globals: no word boundary after the underscores
+sub      | \bEXWebGL                | SKWebGL                   | EXWebGLClass and the file names
+sub      | \bEXTypedArrayApi\b      | SKTypedArrayApi           | spelled in full: \bEXT would also match GL_EXT_*
+sub      | \bEXJsi                  | SKJsi                     |
+sub      | \bEXPlatformUtils\b      | SKPlatformUtils           |
+sub      | \bEXiOS                  | SKiOS                     | nothing in common/ calls these, but a future import might bring one back
+
+sub      | \bexgl                   | skgl                      | local variable names: exglCtxId, exglObjId, exglUnimplemented
+
+
+# ---- what verify.sh may still find -------------------------------------------
+#
+# Everything else matching /\bU?EX\w*/ or /expo/ in the output tree fails the
+# run. These two are not expo's and must survive untouched.
+
+allow    | \bEXT_[A-Za-z0-9_]+       | -                        | GL extension names, e.g. "GL_EXT_texture_filter_anisotropic" read back from the driver
+allow    | \bEXPRESS[A-Z]*\b       | -                        | uppercase prose in stb_image.h's public-domain notice
+sub      | const GLubyte \*glStr;                   | const GLubyte *glStr = nullptr;          | upstream leaves glStr uninitialised, then std::string()s it -- UB, and a null deref under ASan
+sub      | std::string\(reinterpret_cast<const char \*>\(glStr\)\) | std::string(glStr == nullptr ? "" : reinterpret_cast<const char *>(glStr)) | and an empty string beats strlen(NULL) when the query genuinely returns nothing
+patch    | throw std::runtime_error\(\s*"SKGL: getParameter\(\) doesn't support gl\." \+ std::to_string\(pname\) \+ " yet!"\); | return getObjectBindingParameter(runtime, ctx, pname); | upstream throws for every object-binding enum; Lightning reads TEXTURE_BINDING_2D at startup, so answer it (see SKGLContextSeam.h)
+# bufferData / bufferSubData, with the argument handling a browser has. Upstream
+# throws a plain Error for an Array, silently skips a string or a boolean,
+# allocates a zero-size buffer for null, and ignores WebGL2's srcOffset/length.
+# Each body is replaced whole, so no upstream line survives to disagree with the
+# seam. `[\s\S]*?^\}$` is "up to the method's closing brace".
+patch    | ^NATIVE_METHOD\(bufferData\) \{\n[\s\S]*?^\}$ | NATIVE_METHOD(bufferData) {\n  CTX();\n  return webIdlBufferData(runtime, ctx, jsArgv, argc);\n} | bufferData follows WebIDL overload resolution and WebGL2 srcOffset/length, measured against Chromium (see SKGLContextSeam.h)
+patch    | ^NATIVE_METHOD\(bufferSubData\) \{\n[\s\S]*?^\}$ | NATIVE_METHOD(bufferSubData) {\n  CTX();\n  return webIdlBufferSubData(runtime, ctx, jsArgv, argc);\n} | bufferSubData throws TypeError for non-buffer data and honours WebGL2 srcOffset/length, measured against Chromium (see SKGLContextSeam.h)
+
+# UNPACK_PREMULTIPLY_ALPHA_WEBGL. Upstream logs "doesn't support this parameter
+# yet", reports false from getParameter and uploads every image with straight
+# alpha -- so a PNG Lightning asked for premultiplied rendered its transparent
+# pixels as solid white. The flag lives on the context beside unpackFLipY; the
+# texture uploads that honour it are the seam's (see SKGLContextSeam.h).
+patch    | bool unpackFLipY = false; | bool unpackFLipY = false;\n  bool unpackPremultiplyAlpha = false;\n  GLenum unpackColorspaceConversion = GL_BROWSER_DEFAULT_WEBGL; | the context records UNPACK_PREMULTIPLY_ALPHA_WEBGL and UNPACK_COLORSPACE_CONVERSION_WEBGL beside UNPACK_FLIP_Y_WEBGL
+# pixelStorei. Upstream handles three parameters and logs "doesn't support this
+# parameter yet" for the rest -- three.js resets PACK_ALIGNMENT and
+# UNPACK_COLORSPACE_CONVERSION_WEBGL on every renderer, and WebGL2 adds the row
+# length, image height and skip parameters. The body is the seam's.
+patch    | ^NATIVE_METHOD\(pixelStorei\) \{\n[\s\S]*?^\}$ | NATIVE_METHOD(pixelStorei) {\n  CTX();\n  return webglPixelStorei(runtime, ctx, jsArgv, argc);\n} | pixelStorei takes every WebGL1 and WebGL2 parameter, and an unknown one is INVALID_ENUM rather than a log line (see SKGLContextSeam.h)
+patch    | case GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL:\n    case GL_UNPACK_COLORSPACE_CONVERSION_WEBGL:\n      return false; | case GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL:\n      return ctx->unpackPremultiplyAlpha;\n    case GL_UNPACK_COLORSPACE_CONVERSION_WEBGL:\n      return static_cast<double>(ctx->unpackColorspaceConversion); | getParameter reports UNPACK_PREMULTIPLY_ALPHA_WEBGL and UNPACK_COLORSPACE_CONVERSION_WEBGL as set, instead of constant falses
+patch    | ^NATIVE_METHOD\(texImage2D, 6\) \{\n[\s\S]*?^\}$ | NATIVE_METHOD(texImage2D, 6) {\n  CTX();\n  return webglTexImage2D(runtime, ctx, jsArgv, argc);\n} | texImage2D premultiplies as Chromium does (an ImageBitmap by its own state, every other source by the flag) and uploads ImageData pixels upstream dropped
+patch    | ^NATIVE_METHOD\(texSubImage2D, 6\) \{\n[\s\S]*?^\}$ | NATIVE_METHOD(texSubImage2D, 6) {\n  CTX();\n  return webglTexSubImage2D(runtime, ctx, jsArgv, argc);\n} | texSubImage2D gets the same premultiply and ImageData handling, and a null source no longer calls glTexImage2D with sub-image arguments
+# Numeric WebGL arguments convert as WebIDL converts them: ToNumber for anything
+# that is not a number, so `uniform1i(loc, [5])` is 5 and `'2'` is 2, and an
+# integer argument wraps rather than hitting a double-to-int cast that is
+# undefined for NaN and out-of-range values. Upstream threw "Value is an object,
+# expected a number" -- Phaser passes a one-element array for a scalar uniform.
+patch    | #include "SKJsiUtils.h"\n#include "SKWebGLRenderer.h"\n#include "SKTypedArrayApi.h" | #include "SKJsiUtils.h"\n#include "SKWebGLRenderer.h"\n#include "SKTypedArrayApi.h"\n#include "SKGLContextSeam.h" | the argument transform sees the seam's WebIDL conversions
+patch    | template<typename T>\ninline std::enable_if_t<is_integral_v<T>, T> unpackArg\(\n  jsi::Runtime &runtime,\n  const jsi::Value \*jsArgv\) \{\n[\s\S]*?^\}$ | template<typename T>\ninline std::enable_if_t<is_integral_v<T>, T> unpackArg(\n  jsi::Runtime &runtime,\n  const jsi::Value *jsArgv) {\n  return static_cast<T>(webIdlToInteger(runtime, *jsArgv));\n} | integer WebGL arguments use WebIDL's conversion (see SKGLContextSeam.h)
+patch    | template<typename T>\ninline std::enable_if_t<std::is_floating_point_v<T>, T> unpackArg\(\n  jsi::Runtime &runtime,\n  const jsi::Value \*jsArgv\) \{\n[\s\S]*?^\}$ | template<typename T>\ninline std::enable_if_t<std::is_floating_point_v<T>, T> unpackArg(\n  jsi::Runtime &runtime,\n  const jsi::Value *jsArgv) {\n  if (jsArgv->isNumber()) return static_cast<T>(jsArgv->getNumber());\n  return static_cast<T>(webIdlToNumber(runtime, *jsArgv));\n} | floating-point WebGL arguments use WebIDL's ToNumber (see SKGLContextSeam.h)
+
+# WebGL2RenderingContext is not a WebGLRenderingContext. Upstream makes its
+# prototype inherit WebGL1's, calling that the spec; in the IDL both interfaces
+# only include the WebGL1 base mixin, and in a browser
+# `getContext('webgl2') instanceof WebGLRenderingContext` is false. PixiJS reads
+# exactly that to pick its WebGL version, took WebGL2 for WebGL1 and refused to
+# run without OES_vertex_array_object. Both classes now stand alone, and the
+# WebGL2 prototype carries the constants and WebGL1 methods itself.
+patch    | // Make WebGL2RenderingContext extend WebGLRenderingContext on both sides,\n[\s\S]*?setObjectPrototypeOf\(runtime, webgl2RenderingContext, webglRenderingContext\);$ | // WebGL2RenderingContext is its own interface, not a subclass: like WebGL1's\n  // it only includes the WebGLRenderingContextBase mixin (rules: see VENDOR.md).\n  inheritFromJsObject(SKWebGLClass::WebGL2RenderingContext);\n  installConstantsOnConstructor(SKWebGLClass::WebGL2RenderingContext); | WebGL2RenderingContext does not inherit from WebGLRenderingContext, as in a browser, so `instanceof WebGLRenderingContext` is false for a WebGL2 context
+patch    | ^  // Constants and WebGL1 methods reach the WebGL2 prototype via inheritance;\n  // only the WebGL2-exclusive methods need installing here.\n(  auto webgl2Prototype = getRenderingContextPrototype\(runtime, SKWebGLClass::WebGL2RenderingContext\);)\n | $1\n  installConstants(runtime, webgl2Prototype);\n  installWebGLMethods(runtime, webgl2Prototype);\n | the WebGL2 prototype gets the constants and WebGL1 methods of its own, since it no longer inherits them
+patch    | ^// Installs only WebGL2-exclusive methods\. WebGL1 methods reach WebGL2\n// instances via the prototype chain \(WebGL2RenderingContext\.prototype\n// inherits from WebGLRenderingContext\.prototype\)\.$ | // Installs only WebGL2-exclusive methods. The WebGL2 prototype does not inherit\n// WebGL1's, so installWebGLInstanceMethods installs the WebGL1 methods on it too. | the comment says what the code now does
+
+# drawingBufferWidth/Height are live accessors on the prototypes here
+# (installDrawingBufferSize in gfx/VendoredWebGL.cpp), because GlSurface's size
+# is live and upstream's snapshot went stale the moment the window resized. The
+# snapshot itself has to go, not merely be deleted afterwards: with a second
+# context -- one canvas, one context (Architecture.md 3.1) -- the accessors are
+# already on the prototype when the next context is built, and a data-property
+# write against an inherited getter-only accessor throws out of the middle of
+# createWebGLRenderer.
+patch    | ^(  )gl\.setProperty\(runtime, "drawingBufferWidth", viewport\.viewportWidth\);\n  gl\.setProperty\(runtime, "drawingBufferHeight", viewport\.viewportHeight\);$ | $1(void)viewport;  // ScreenKit: drawingBufferWidth/Height are getter-only accessors on\n  // the prototypes, reading the live surface (gfx/VendoredWebGL.cpp). A snapshot here\n  // would go stale on a resize, and -- once a second canvas has installed the accessors\n  // -- writing one would throw against them. | the drawing-buffer size is read live from the GL surface, not snapshotted at install -- and a second context must not write through the accessor it inherits
+
+# Portability: headers upstream reaches only through libc++'s transitive
+# includes. Apple's libc++ brings <atomic> in with <set>; GCC's libstdc++, which a
+# Linux build uses, does not, and std::atomic_uint is then undeclared.
+patch    | ^#include <set>$ | #include <atomic>\n#include <set> | SKGLNativeContext.h uses std::atomic_uint without including <atomic>; the Linux (libstdc++) build needs it spelled out
+
+# No GL thread, so no queue. Upstream targets Android's GLSurfaceView, where GL
+# runs on its own thread and the JS thread can only post work to it: hence a
+# batch of std::function, and a copy of every buffer handed to it, since JS could
+# write to the array again before the op ran.
+#
+# ScreenKit has one thread. installVendoredWebGL makes the context current on the
+# JS thread, every `gl` host function is called there, and presentFrame flushes
+# there too -- so the queue posts work from a thread to itself. What it costs is
+# a heap allocation per GL call (a lambda over a captured buffer does not fit
+# std::function's small-buffer optimisation) on a path that runs 27,000 times a
+# second, plus a memcpy of every payload, to protect against a race that cannot
+# happen. Android's background is not an exception: GlSurface::suspend() runs
+# with the runtime paused, so no GL call is in flight to execute against a
+# drawable that has gone away.
+#
+# The ops run where they were already going to run, in the same order, on the
+# same thread. What changes is that they run now instead of at the end of the
+# frame -- which also puts a GL error on the call that caused it.
+#
+# Templates, not std::function: keeping the `Op` signature would execute the op
+# immediately but still heap-allocate at every call site to build the
+# std::function that gets passed in. The point of the change is the allocation,
+# so the type has to go with it.
+patch    | // \[JS thread\] Send the current 'next' batch to GL and make a new 'next' batch\n  void endNextBatch\(\) noexcept;\n\n  // \[JS thread\] Add an Op to the 'next' batch\n  void addToNextBatch\(Op &&op\) noexcept;\n\n  // \[JS thread\] Add a blocking operation to the 'next' batch -- waits for the\n  // queued function to run before returning\n  void addBlockingToNextBatch\(Op &&op\); | // ScreenKit: there is no GL thread, so an "op" is just a call (VENDOR.md).\n  // These are templates so that no std::function is built at the call site --\n  // the heap allocation was the cost, not the indirect call.\n\n  // Kept so callers need not know: there is no batch to end.\n  void endNextBatch() noexcept {}\n\n  // Run it. On the JS thread, with the context current, in call order.\n  template <typename F>\n  void addToNextBatch(F &&op) { op(); }\n\n  // Ran before this returns, which is all "blocking" ever meant.\n  template <typename F>\n  void addBlockingToNextBatch(F &&op) { op(); } | GL runs on the JS thread, so ops execute immediately instead of being queued as std::function
+patch    | jsi::Value addFutureToNextBatch\(\n    jsi::Runtime &runtime,\n    std::function<unsigned int\(void\)> &&op\n  \) noexcept; | template <typename F>\n  jsi::Value addFutureToNextBatch([[maybe_unused]] jsi::Runtime &runtime, F &&op) {\n    auto skglObjId = createObject();\n    mapObject(skglObjId, op());\n    return static_cast<double>(skglObjId);\n  } | the object id is mapped to the real GL name now, rather than when a batch is drained
+patch    | // \[GL thread\] Do all the remaining work we can do on the GL thread\n  // triggered by call to flushOnGLThread\n  void flush\(void\); | // Nothing is queued, so there is nothing to drain. Kept because presentFrame\n  // and the Android host both call it (gfx/VendoredWebGL.cpp).\n  void flush(void) {} | flush has nothing left to do
+patch    | private:\n  // Queue\n  Batch nextBatch;\n  std::vector<Batch> backlog;\n  std::mutex backlogMutex;\n\n | | the queue's storage and its mutex go with it
+patch    |   using Op = std::function<void\(void\)>;\n  using Batch = std::vector<Op>;\n | | Op and Batch named a queue that no longer exists
+patch    | ^void SKGLContext::endNextBatch\(\) noexcept \{\n[\s\S]*?^\}\n\n// \[JS thread\] Add an Op to the 'next' batch -- the arguments are any form of\n// constructor arguments for Op\nvoid SKGLContext::addToNextBatch\(Op &&op\) noexcept \{\n[\s\S]*?^\}\n\n// \[JS thread\] Add a blocking operation to the 'next' batch -- waits for the\n// queued function to run before returning\nvoid SKGLContext::addBlockingToNextBatch\(Op &&op\) \{\n[\s\S]*?^\}\n\n// \[JS thread\] Enqueue a function and return an SKGL object that will get mapped\n// to the function's return value when it is called on the GL thread\.\njsi::Value SKGLContext::addFutureToNextBatch\(\n  jsi::Runtime &runtime,\n  std::function<unsigned int\(void\)> &&op\) noexcept \{\n[\s\S]*?^\}\n\n// \[GL thread\] Do all the remaining work we can do on the GL thread\nvoid SKGLContext::flush\(void\) \{\n[\s\S]*?^\}\n | | their definitions live in the header now, as templates
+
+# WebGL extensions on a GLES 2 context. Upstream enumerates them with GLES 3's
+# glGetStringi, so a GLES 2 GPU reports none (see SKGLContextSeam.h).
+patch    | #include "SKGLNativeContext.h"\n\n#include <future>\n\n#include "SKPlatformUtils.h" | #include "SKGLNativeContext.h"\n\n#include <future>\n\n#include "SKGLContextSeam.h"\n#include "SKPlatformUtils.h" | the native context sees the seam's extension reader
+patch    | ^void SKGLContext::maybeReadAndCacheSupportedExtensions\(\) \{\n[\s\S]*?^\}$ | void SKGLContext::maybeReadAndCacheSupportedExtensions() {\n  if (supportedExtensions.empty()) readSupportedExtensions(this);\n} | the extension list is read on GLES 2 as well as GLES 3, and named as WebGL names it (see SKGLContextSeam.h)

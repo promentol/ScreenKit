@@ -1,0 +1,3 @@
+{
+  "note": "No host sampler wrote this file. On a Raspberry Pi the Ports launcher runs examples/system-info/pi-prelaunch.sh, which rewrites it once a second from /proc and vcgencmd."
+}

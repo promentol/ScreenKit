@@ -1,0 +1,22 @@
+{
+  "name": "@screenkit/shaka",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A player whose API mirrors Shaka Player's, over the ScreenKit runtime's platform players (AVPlayer, Media3 ExoPlayer, libvlc). @screenkit/vite-plugin resolves `shaka-player` imports to it.",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

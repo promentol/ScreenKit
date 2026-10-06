@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The networking suite's entry point, merged in only when Gradle is asked for it
+  with -Pscreenkit.netTests: the same property that builds
+  libscreenkit-net-tests.so, which this activity is the only caller of
+  (runtime/android/app/build.gradle). A plain debug build carries neither, so
+  there is nothing here to reach; the activity refuses a non-debuggable build on
+  top of that.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!--
+          One row of the runtime's net suite, run in the app process so it has a
+          JavaVM that can see dev.screenkit.net.HttpClient, the INTERNET
+          permission and the app's own storage. Driven by
+          tools/android/android.sh test.
+
+          Exported because `adb shell am start` has to reach it, but behind
+          SET_DEBUG_APP: the shell UID holds that permission and an ordinary app
+          cannot (it is signature|privileged|development). Without it any app on
+          the device could start this activity, and finishing it calls
+          System.exit on ScreenKit's process.
+        -->
+        <activity
+            android:name="dev.screenkit.net.NetTests"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance"
+            android:permission="android.permission.SET_DEBUG_APP"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+    </application>
+</manifest>

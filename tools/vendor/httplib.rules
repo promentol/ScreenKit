@@ -1,0 +1,34 @@
+# The patch table for tools/vendor/httplib.sh.
+#
+# This file is the whole answer to "what did we change about cpp-httplib?". The
+# header is otherwise taken byte for byte from the pinned upstream commit, and
+# nothing else edits it: the script applies these rows to the download, checks
+# the result against a second pin, and runtime/cmake/HttplibVendored.cmake
+# refuses a tree that matches neither.
+#
+# Format -- four `|`-separated fields, padding ignored:
+#
+#   patch | perl regex | replacement | why
+#
+# Every row must match **exactly once** in the upstream header, or the import
+# stops: a fix whose target upstream reshaped must fail loudly, not fall away.
+# Patterns are perl regexes run over the whole file with /m; replacements may
+# use \n, \t and $1..$9 and nothing else. No field may contain a literal `|`.
+#
+# Keep this table short. Each row is a divergence from upstream that every
+# version bump has to carry, and the better home for all of them is upstream.
+
+# ---- WebSocket: the peer's Close frame -------------------------------------------
+#
+# `WebSocket::read` echoes a Close frame and returns `Fail` after **discarding
+# its payload** -- which is where the peer's status code and reason are -- and
+# a transport failure returns `Fail` too, so a caller cannot tell a clean close
+# from a dropped connection. NetServiceLinux.cpp reported every close it did not
+# send as 1006 because of it. These three rows keep the payload and expose it.
+# Still true of upstream master on 2026-09-19.
+
+patch | ^( +)case Opcode::Close: \{\n( +)if \(!closed_\.exchange\(true\)\) \{ | $1case Opcode::Close: {\n$2// ScreenKit (tools/vendor/httplib.rules): keep what the peer closed with.\n$2peer_close_payload_ = payload;\n$2peer_closed_ = true;\n$2if (!closed_.exchange(true)) { | WebSocket::read: keep the Close payload
+
+patch | ^( +)std::atomic<bool> closed_\{false\};\n( +)// Set once the caller has bounded read\(\) | $1std::atomic<bool> closed_{false};\n$1// ScreenKit (tools/vendor/httplib.rules): the payload of the Close frame the\n$1// peer sent, if one has arrived. Written and read by the thread in read().\n$1std::string peer_close_payload_;\n$1bool peer_closed_ = false;\n$2// Set once the caller has bounded read() | WebSocket: the members it is kept in
+
+patch | ^( +)const std::string &subprotocol\(\) const;\n( +)void set_read_timeout\(time_t sec, time_t usec = 0\); | $1const std::string &subprotocol() const;\n$1// ScreenKit (tools/vendor/httplib.rules): the payload of the Close frame the\n$1// peer sent -- a two-byte status code, then a UTF-8 reason -- or null when no\n$1// Close frame has arrived. Call it from the thread that called read().\n$1const std::string *peer_close_payload() const {\n$1  return ws_ && ws_->peer_closed_ ? &ws_->peer_close_payload_ : nullptr;\n$1}\n$2void set_read_timeout(time_t sec, time_t usec = 0); | WebSocketClient: the accessor

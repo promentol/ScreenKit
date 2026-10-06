@@ -1,0 +1,18 @@
+{
+  "name": "@screenkit/docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "ScreenKit documentation: the guide and the environment reference, built with Astro Starlight.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.42.2",
+    "astro": "^7.3.3",
+    "sharp": "^0.35.4"
+  }
+}

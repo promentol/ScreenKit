@@ -1,0 +1,81 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "description": "Ninja, never the Xcode generator (Architecture.md 11), and one build tree per platform.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "macos",
+      "displayName": "macOS",
+      "description": "screenkit-host and the test suite for this Mac.",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" }
+    },
+    {
+      "name": "macos-asan",
+      "displayName": "macOS, ASan + UBSan",
+      "description": "The test suite under AddressSanitizer and UndefinedBehaviorSanitizer.",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "SCREENKIT_SANITIZE": "address,undefined"
+      }
+    },
+    {
+      "name": "tvos-simulator",
+      "displayName": "tvOS simulator",
+      "description": "screenkit-host.app for the tvOS simulator. SCREENKIT_APP_PKG=<app.skpkg> embeds a package.",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_SYSTEM_NAME": "tvOS",
+        "CMAKE_OSX_SYSROOT": "appletvsimulator",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "17.0"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "macos", "configurePreset": "macos" },
+    { "name": "macos-asan", "configurePreset": "macos-asan" },
+    { "name": "tvos-simulator", "configurePreset": "tvos-simulator" }
+  ],
+  "testPresets": [
+    {
+      "name": "macos",
+      "configurePreset": "macos",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 6 }
+    },
+    {
+      "name": "macos-asan",
+      "configurePreset": "macos-asan",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 6 }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "macos",
+      "steps": [
+        { "type": "configure", "name": "macos" },
+        { "type": "build", "name": "macos" },
+        { "type": "test", "name": "macos" }
+      ]
+    },
+    {
+      "name": "macos-asan",
+      "steps": [
+        { "type": "configure", "name": "macos-asan" },
+        { "type": "build", "name": "macos-asan" },
+        { "type": "test", "name": "macos-asan" }
+      ]
+    }
+  ]
+}

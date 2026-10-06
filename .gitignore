@@ -1,0 +1,32 @@
+node_modules/
+dist/
+dist-screenkit/
+app.skpkg/
+.turbo/
+.astro/
+runtime/build
+
+# runtime — CMake out-of-tree builds (CMakePresets → runtime/build/<preset>)
+runtime/build/
+
+# runtime — Android TV / Fire TV
+runtime/android/.gradle/
+runtime/android/local.properties
+runtime/android/**/build/
+runtime/android/**/.cxx/
+
+# runtime — CTest / mistaken in-source configure
+runtime/Testing/
+runtime/CMakeCache.txt
+runtime/CMakeFiles/
+runtime/cmake_install.cmake
+
+**/.zig-cache
+
+poc/**/build
+
+*.o
+
+tools/batocera
+tools/android/out
+tools/**/build

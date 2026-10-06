@@ -1,0 +1,415 @@
+{
+  "_comment": "Prebuilt third-party binaries. A fresh clone must compile no third-party code.",
+  "angle": {
+    "version": "chromium/7578",
+    "source": "godotengine/godot-angle-static",
+    "sourceNote": "Google publishes no ANGLE binaries and Expo ships none (expo-gl uses Apple's deprecated EAGL). Godot's static builds are the only public option. Shipping should build ANGLE in our own CI.",
+    "headers": {
+      "repo": "https://github.com/google/angle.git",
+      "ref": "aaebda1c5a40c15340d7a01a935a7c5398443272",
+      "refNote": "The head of chromium/7578, and the commit the libraries report in GL_VERSION ('ANGLE 2.1.1 git hash: aaebda1c5a40'). Headers and libraries must come from one commit: gl-context asserts the match.",
+      "sparse": [
+        "include"
+      ],
+      "note": "Sparse checkout of include/ only (~1MB); no depot_tools needed."
+    },
+    "targets": {
+      "apple-tvos-simulator-arm64": {
+        "asset": "godot-angle-static-arm64-ios-sim-release.zip",
+        "sha256": "9b7bdc1e3e28cd632ac709239ee209ca7cff73f145e7a6077e01bbe01c7e3d84",
+        "size": 4091176,
+        "retag": {
+          "from": "ios-simulator",
+          "to": "tvos-simulator"
+        },
+        "note": "No tvos-simulator build exists upstream; derived from the ios-simulator archive by rewriting LC_BUILD_VERSION."
+      },
+      "apple-tvos-device-arm64": {
+        "asset": "godot-angle-static-arm64-ios-release.zip",
+        "sha256": "ee57e8e6f6d5477abda3d3956d53e75f04357ddeec95fdfd877b03e000ab548f",
+        "size": 4087116,
+        "retag": {
+          "from": "ios",
+          "to": "tvos"
+        },
+        "note": "No tvos build exists upstream; derived from the ios archive by rewriting LC_BUILD_VERSION."
+      },
+      "apple-ios-simulator-arm64": {
+        "asset": "godot-angle-static-arm64-ios-sim-release.zip",
+        "sha256": "9b7bdc1e3e28cd632ac709239ee209ca7cff73f145e7a6077e01bbe01c7e3d84",
+        "size": 4091176
+      },
+      "apple-ios-simulator-x86_64": {
+        "asset": "godot-angle-static-x86_64-ios-sim-release.zip",
+        "sha256": "b8832d9794ecad8d456f23c5f970ccb436f71e7c48ff9122fbda7ad83878a41a",
+        "size": 3871553
+      },
+      "apple-ios-device-arm64": {
+        "asset": "godot-angle-static-arm64-ios-release.zip",
+        "sha256": "ee57e8e6f6d5477abda3d3956d53e75f04357ddeec95fdfd877b03e000ab548f",
+        "size": 4087116
+      },
+      "apple-macos-arm64": {
+        "asset": "godot-angle-static-arm64-macos-release.zip",
+        "sha256": "9eadd2055f66507e9d74655e7683e068e7e4a9dade5a84bc03d3f5affdfb7b9d",
+        "size": 4225503
+      },
+      "apple-macos-x86_64": {
+        "asset": "godot-angle-static-x86_64-macos-release.zip",
+        "sha256": "4e11d10e01b4a5e06f24afbafc3302d7ee3135bd6b076d6f818b1c87a8b18b94",
+        "size": 4213806
+      },
+      "linux-x86_64": {
+        "asset": "godot-angle-static-x86_64-gcc-release.zip",
+        "sha256": "1f578a46ce461fbea75e11a76ea7421f19d2d82f38df804eedf88a44669a4664",
+        "size": 4483101
+      },
+      "linux-x86_32": {
+        "asset": "godot-angle-static-x86_32-gcc-release.zip",
+        "sha256": "85bd690c728d28dfeb3744767e46008ed9d6570582d7cef2f8ad809677f77640",
+        "size": 4456012
+      },
+      "linux-arm64": {
+        "asset": "godot-angle-static-arm64-llvm-release.zip",
+        "sha256": "4b6147fc84e98d5463a9172ca1141c6a03dbfcdd6d4800ab1bcc69e724d2f9fa",
+        "size": 4372575
+      },
+      "windows-x86_64": {
+        "asset": "godot-angle-static-x86_64-msvc-release.zip",
+        "sha256": "48f223780834fb27284f4f64c56e17b6a570a7d5a14a40da4fb53575b973ed5a",
+        "size": 30480734
+      },
+      "windows-arm64": {
+        "asset": "godot-angle-static-arm64-msvc-release.zip",
+        "sha256": "f1ae046af6a1615cd6043eb1028b8c50690fc68ffeda21a1cadbf15c8aad730a",
+        "size": 31786512
+      }
+    },
+    "unavailable": {
+      "android-arm64": "No public prebuilt ANGLE for Android exists. Android ships ANGLE as an optional system driver, not a linkable library. Android has universal native GLES 3.x, so ANGLE there is for driver normalisation only -- build from source if we decide we need it.",
+      "android-arm32": "Same as android-arm64.",
+      "android-x86_64": "Same as android-arm64 (emulator)."
+    }
+  },
+  "sdl3": {
+    "_comment": "SDL3 is consumed prebuilt from the official release, never compiled. The runtime uses it for timers today (SDL_AddTimerNS owns event-loop scheduling); the window, input and audio subsystems arrive with their own specs.",
+    "version": "3.4.16",
+    "versionSource": "libsdl-org/SDL release-3.4.16 -- the same release poc/build/sdl3-src is checked out at",
+    "apple": {
+      "source": "libsdl-org/SDL releases (official)",
+      "url": "https://github.com/libsdl-org/SDL/releases/download/release-{version}/SDL3-{version}.dmg",
+      "asset": "SDL3-3.4.16.dmg",
+      "sha256": "675660a9e457239af615f9e41f788612168d1639b9d2eda2957e8dace26687fd",
+      "size": 28489639,
+      "format": "dmg",
+      "copy": [
+        "SDL3.xcframework",
+        "LICENSE.txt"
+      ],
+      "note": "The .dmg carries one SDL3.xcframework with macos-arm64_x86_64, ios-arm64, ios-arm64_x86_64-simulator, tvos-arm64 and tvos-arm64_x86_64-simulator slices -- all genuinely built for their platform (the tvOS simulator slice reports LC_BUILD_VERSION platform 8), so retag-macho.py is never applied here. Headers live in each SDL3.framework/Headers, which is what makes #include <SDL3/SDL_timer.h> resolve."
+    },
+    "targets": {
+      "apple-macos-arm64": {
+        "framework": "SDL3.xcframework/macos-arm64_x86_64/SDL3.framework",
+        "slice": "macos-arm64_x86_64 (versioned framework)",
+        "minOS": "11.0"
+      },
+      "apple-macos-x86_64": {
+        "framework": "SDL3.xcframework/macos-arm64_x86_64/SDL3.framework",
+        "slice": "macos-arm64_x86_64 (versioned framework)",
+        "minOS": "11.0"
+      },
+      "apple-tvos-simulator-arm64": {
+        "framework": "SDL3.xcframework/tvos-arm64_x86_64-simulator/SDL3.framework",
+        "slice": "tvos-arm64_x86_64-simulator",
+        "minOS": "14.0"
+      },
+      "apple-tvos-device-arm64": {
+        "framework": "SDL3.xcframework/tvos-arm64/SDL3.framework",
+        "slice": "tvos-arm64",
+        "minOS": "14.0"
+      },
+      "apple-ios-simulator-arm64": {
+        "framework": "SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework",
+        "slice": "ios-arm64_x86_64-simulator",
+        "minOS": "14.0"
+      },
+      "apple-ios-simulator-x86_64": {
+        "framework": "SDL3.xcframework/ios-arm64_x86_64-simulator/SDL3.framework",
+        "slice": "ios-arm64_x86_64-simulator",
+        "minOS": "14.0"
+      },
+      "apple-ios-device-arm64": {
+        "framework": "SDL3.xcframework/ios-arm64/SDL3.framework",
+        "slice": "ios-arm64",
+        "minOS": "14.0"
+      },
+      "android-arm64": {
+        "aar": "SDL3-3.4.16.aar",
+        "abi": "arm64-v8a",
+        "slice": "SDL3-3.4.16.aar, prefab SDL3::SDL3-shared, arm64-v8a",
+        "minSdk": 21
+      },
+      "android-arm32": {
+        "aar": "SDL3-3.4.16.aar",
+        "abi": "armeabi-v7a",
+        "slice": "SDL3-3.4.16.aar, prefab SDL3::SDL3-shared, armeabi-v7a",
+        "minSdk": 21
+      }
+    },
+    "android": {
+      "source": "libsdl-org/SDL releases (official)",
+      "url": "https://github.com/libsdl-org/SDL/releases/download/release-{version}/SDL3-devel-{version}-android.zip",
+      "asset": "SDL3-devel-3.4.16-android.zip",
+      "sha256": "e1da8d9298471ea4ab8c6d48a804c0ac5415f35f30fcf7eba61aa7357e165765",
+      "size": 16651748,
+      "format": "zip",
+      "copy": [
+        "SDL3-3.4.16.aar",
+        "LICENSE.txt"
+      ],
+      "aar": "SDL3-3.4.16.aar",
+      "note": "The zip carries one SDL3-3.4.16.aar: prefab package SDL3 (module SDL3-shared; api 21, stl none) for arm64-v8a, armeabi-v7a, x86 and x86_64, and a classes.jar with org.libsdl.app.SDLActivity, which the Android shell extends. It has no jni/ directory: libSDL3.so reaches the APK as a runtime file of the CMake target that links the prefab module. Only the .aar and the licence are kept from the zip."
+    },
+    "unavailable": {
+      "android-x86_64": "In the .aar, and deferred by choice: the Android build targets the ABIs TV devices ship (deferred-work.md), so only android-arm64 and android-arm32 slice it.",
+      "linux-x86_64": "SDL publishes no Linux binary -- distributions package it instead, and the release page carries only source tarballs, the Apple .dmg, Windows VC/mingw archives and the Android .aar. Linux/Batocera is M11 and links the system libSDL3.so through pkg-config, which is the platform's own answer rather than a prebuilt.",
+      "linux-arm64": "Same as linux-x86_64.",
+      "windows-x86_64": "Published as SDL3-devel-3.4.16-VC.zip, but Windows is not a ScreenKit target -- not wired up.",
+      "windows-arm64": "Same as windows-x86_64."
+    }
+  },
+  "sdl3_ttf": {
+    "_comment": "SDL3_ttf is SDL's own font library, consumed prebuilt from the official release like SDL3 itself. The 2D canvas rasterises text through it (core/src/text): FreeType for glyphs and HarfBuzz for shaping, both linked inside the framework, so neither is a dependency of ours.",
+    "version": "3.2.2",
+    "versionSource": "libsdl-org/SDL_ttf release-3.2.2 -- built against SDL 3.2, which the pinned SDL3 3.4.16 is ABI-compatible with",
+    "apple": {
+      "source": "libsdl-org/SDL_ttf releases (official)",
+      "url": "https://github.com/libsdl-org/SDL_ttf/releases/download/release-{version}/SDL3_ttf-{version}.dmg",
+      "asset": "SDL3_ttf-3.2.2.dmg",
+      "sha256": "2c7035eba9e63df137dbe95d2672f4c52e68d76bf6dd7c47a325f29bb6ba3cf7",
+      "size": 8093154,
+      "format": "dmg",
+      "copy": [
+        "SDL3_ttf.xcframework",
+        "LICENSE.txt"
+      ],
+      "note": "One SDL3_ttf.xcframework with the same five slices as SDL3. Each framework links SDL3 through @rpath/SDL3.framework, so it loads the SDL3 the host already carries; FreeType and HarfBuzz are static inside it."
+    },
+    "android": {
+      "source": "libsdl-org/SDL_ttf releases (official)",
+      "url": "https://github.com/libsdl-org/SDL_ttf/releases/download/release-{version}/SDL3_ttf-devel-{version}-android.zip",
+      "asset": "SDL3_ttf-devel-3.2.2-android.zip",
+      "sha256": "48e534daf88eec5c7f0c95fa6ca0e8a5f38f5fc7276824573131cebc403ee14c",
+      "size": 21601182,
+      "format": "zip",
+      "copy": [
+        "SDL3_ttf-3.2.2.aar",
+        "LICENSE.txt"
+      ],
+      "aar": "SDL3_ttf-3.2.2.aar",
+      "note": "One SDL3_ttf-3.2.2.aar: prefab package SDL3_ttf (module SDL3_ttf-shared; api 19, stl none) for the same four ABIs as SDL3, with FreeType and HarfBuzz inside. It links libSDL3.so dynamically, so it uses the SDL3 the APK carries."
+    },
+    "targets": {
+      "apple-macos-arm64": {
+        "framework": "SDL3_ttf.xcframework/macos-arm64_x86_64/SDL3_ttf.framework",
+        "slice": "macos-arm64_x86_64 (versioned framework)",
+        "minOS": "11.0"
+      },
+      "apple-macos-x86_64": {
+        "framework": "SDL3_ttf.xcframework/macos-arm64_x86_64/SDL3_ttf.framework",
+        "slice": "macos-arm64_x86_64 (versioned framework)",
+        "minOS": "11.0"
+      },
+      "apple-tvos-simulator-arm64": {
+        "framework": "SDL3_ttf.xcframework/tvos-arm64_x86_64-simulator/SDL3_ttf.framework",
+        "slice": "tvos-arm64_x86_64-simulator",
+        "minOS": "14.0"
+      },
+      "apple-tvos-device-arm64": {
+        "framework": "SDL3_ttf.xcframework/tvos-arm64/SDL3_ttf.framework",
+        "slice": "tvos-arm64",
+        "minOS": "14.0"
+      },
+      "apple-ios-simulator-arm64": {
+        "framework": "SDL3_ttf.xcframework/ios-arm64_x86_64-simulator/SDL3_ttf.framework",
+        "slice": "ios-arm64_x86_64-simulator",
+        "minOS": "14.0"
+      },
+      "apple-ios-simulator-x86_64": {
+        "framework": "SDL3_ttf.xcframework/ios-arm64_x86_64-simulator/SDL3_ttf.framework",
+        "slice": "ios-arm64_x86_64-simulator",
+        "minOS": "14.0"
+      },
+      "apple-ios-device-arm64": {
+        "framework": "SDL3_ttf.xcframework/ios-arm64/SDL3_ttf.framework",
+        "slice": "ios-arm64",
+        "minOS": "14.0"
+      },
+      "android-arm64": {
+        "aar": "SDL3_ttf-3.2.2.aar",
+        "abi": "arm64-v8a",
+        "slice": "SDL3_ttf-3.2.2.aar, prefab SDL3_ttf::SDL3_ttf-shared, arm64-v8a",
+        "minSdk": 21
+      },
+      "android-arm32": {
+        "aar": "SDL3_ttf-3.2.2.aar",
+        "abi": "armeabi-v7a",
+        "slice": "SDL3_ttf-3.2.2.aar, prefab SDL3_ttf::SDL3_ttf-shared, armeabi-v7a",
+        "minSdk": 21
+      }
+    },
+    "unavailable": {
+      "android-x86_64": "In the .aar, and deferred by choice: same as SDL3's.",
+      "linux-x86_64": "SDL_ttf publishes no Linux binary, like SDL itself. Linux/Batocera is M11 and links the system libSDL3_ttf.so through pkg-config.",
+      "linux-arm64": "Same as linux-x86_64.",
+      "windows-x86_64": "Published as SDL3_ttf-devel-3.2.2-VC.zip, but Windows is not a ScreenKit target -- not wired up.",
+      "windows-arm64": "Same as windows-x86_64."
+    }
+  },
+  "hermes": {
+    "_comment": "Hermes is consumed prebuilt from the React Native distribution, never compiled. This version IS the pin: hermesc and the engine must come from the same commit or the loader refuses the bytecode.",
+    "version": "260318099.0.2",
+    "versionSource": "facebook/react-native packages/react-native/sdks/hermes-engine/version.properties -> HERMES_VERSION_NAME",
+    "bytecodeVersion": 99,
+    "runtime": {
+      "source": "com.facebook.hermes:hermes-ios (Maven Central)",
+      "url": "https://repo1.maven.org/maven2/com/facebook/hermes/hermes-ios/{version}/hermes-ios-{version}-hermes-ios-release.tar.gz",
+      "asset": "hermes-ios-260318099.0.2-hermes-ios-release.tar.gz",
+      "sha256": "1179456e2f1022850b0f486845faf68c2e4138b998804503e08a7a8e1f8b100d",
+      "size": 25332877,
+      "format": "tar.gz",
+      "stripComponents": 0,
+      "note": "Root of the archive is destroot/. The framework is hermesvm, not hermes, and it exports the JSI implementation itself (466 facebook::jsi::* symbols) -- embedders link hermesvm alone and never compile jsi.cpp or vendor ReactCommon."
+    },
+    "android": {
+      "source": "com.facebook.hermes:hermes-android (Maven Central)",
+      "url": "https://repo1.maven.org/maven2/com/facebook/hermes/hermes-android/{version}/hermes-android-{version}-release.aar",
+      "asset": "hermes-android-260318099.0.2-release.aar",
+      "sha256": "fc61629c65aa471fbbed5d373e0156f5e6082e1f25c8bbb48c8623548194b2d2",
+      "size": 85322876,
+      "format": "aar",
+      "note": "Kept as the .aar Gradle consumes. Prefab package hermes-engine, module hermesvm (api 24, NDK 27, c++_shared) for arm64-v8a, armeabi-v7a, x86 and x86_64; jni/<abi> carries the stripped libhermesvm.so the APK ships. What it does not carry: the prefab excludes jsi/**, so include/jsi is copied from this Hermes's Apple destroot (byte-identical to React Native 0.88.0-rc.0's); and unlike the Apple framework, this hermesvm exports no JSI implementation -- it links libjsi.so and libfbjni.so. libjsi.so comes from the jsi block below. fbjni is com.facebook.fbjni:fbjni:0.7.0, the version this AAR's POM names, resolved by Gradle (runtime/android/gradle/verification-metadata.xml). Hermes's Intl on Android is Java, reached through fbjni.",
+      "jsi": {
+        "source": "com.facebook.react:react-android:0.88.0-rc.0 (Maven Central) -- the React Native release that pins this Hermes (hermes-compiler 260318099.0.2)",
+        "url": "https://repo1.maven.org/maven2/com/facebook/react/react-android/0.88.0-rc.0/react-android-0.88.0-rc.0-release.aar",
+        "asset": "react-android-0.88.0-rc.0-release.aar",
+        "sha256": "2b26c7597c10b3dd04416299e8c2200b90dbd5696a625b998ca7ebaed2966652",
+        "size": 171524202,
+        "extract": {
+          "jni/arm64-v8a/libjsi.so": "5fdfbabeee20b300fc084bc9bddfa55b7a3e46dafc1464a4309cf0c906f6b0eb",
+          "jni/armeabi-v7a/libjsi.so": "641f9537341c8eddc7febbdccccb6964a04ac944b8b9cb01ea3a0a0d82af336a"
+        },
+        "note": "Only libjsi.so is kept, about 300-400 KB per ABI, each file checked against its own sha256 here; it needs nothing but libc++_shared.so. The rest of the AAR is React Native, which ScreenKit does not use, so it is read in memory and never written to the cache."
+      }
+    },
+    "include": "destroot/include",
+    "includeNote": "Headers live ONLY here (jsi/jsi.h, hermes/hermes.h). The frameworks carry no Headers directory, so destroot/include must be on the header search path.",
+    "targets": {
+      "apple-macos-arm64": {
+        "framework": "destroot/Library/Frameworks/macosx/hermesvm.framework",
+        "slice": "macosx (versioned framework, x86_64 + arm64 fat)",
+        "minOS": "11.0"
+      },
+      "apple-macos-x86_64": {
+        "framework": "destroot/Library/Frameworks/macosx/hermesvm.framework",
+        "slice": "macosx (versioned framework, x86_64 + arm64 fat)",
+        "minOS": "11.0"
+      },
+      "apple-tvos-simulator-arm64": {
+        "framework": "destroot/Library/Frameworks/universal/hermesvm.xcframework/tvos-arm64_x86_64-simulator/hermesvm.framework",
+        "slice": "tvos-arm64_x86_64-simulator",
+        "minOS": "15.1"
+      },
+      "apple-tvos-device-arm64": {
+        "framework": "destroot/Library/Frameworks/universal/hermesvm.xcframework/tvos-arm64/hermesvm.framework",
+        "slice": "tvos-arm64",
+        "minOS": "15.1"
+      },
+      "apple-ios-simulator-arm64": {
+        "framework": "destroot/Library/Frameworks/universal/hermesvm.xcframework/ios-arm64_x86_64-simulator/hermesvm.framework",
+        "slice": "ios-arm64_x86_64-simulator",
+        "minOS": "15.1"
+      },
+      "apple-ios-simulator-x86_64": {
+        "framework": "destroot/Library/Frameworks/universal/hermesvm.xcframework/ios-arm64_x86_64-simulator/hermesvm.framework",
+        "slice": "ios-arm64_x86_64-simulator",
+        "minOS": "15.1"
+      },
+      "apple-ios-device-arm64": {
+        "framework": "destroot/Library/Frameworks/universal/hermesvm.xcframework/ios-arm64/hermesvm.framework",
+        "slice": "ios-arm64",
+        "minOS": "15.1"
+      },
+      "linux-arm64": {
+        "slice": "libhermesvm.so, aarch64 -- Raspberry Pi 3B+ and newer on a 64-bit OS",
+        "lib": "lib/libhermesvm.so",
+        "include": "include",
+        "requires": "glibc >= 2.34, libstdc++ GLIBCXX_3.4.30 (GCC 12)",
+        "archive": {
+          "asset": "hermes-linux-arm64-260318099.0.2.tar.gz",
+          "sha256": "5bed90e99d0b32be86ad6385b8ac8bebd9082ec8dcc5e164b1a18a4499a095c1",
+          "size": 16610228
+        },
+        "intl": "ICU 72 in lib/: Collator and DateTimeFormat are real; Hermes leaves NumberFormat and toLocale*Case as placeholders on Linux"
+      },
+      "linux-x86_64": {
+        "slice": "libhermesvm.so, x86_64",
+        "lib": "lib/libhermesvm.so",
+        "include": "include",
+        "requires": "glibc >= 2.34, libstdc++ GLIBCXX_3.4.30 (GCC 12)",
+        "archive": {
+          "asset": "hermes-linux-x86_64-260318099.0.2.tar.gz",
+          "sha256": "bbeded7c479701db3011bda8e97c42fd2d0d35ca7779cd0fd0706f94c25d8e4c",
+          "size": 16721816
+        },
+        "intl": "ICU 72 in lib/: Collator and DateTimeFormat are real; Hermes leaves NumberFormat and toLocale*Case as placeholders on Linux"
+      },
+      "android-arm64": {
+        "slice": "hermes-android .aar, prefab hermes-engine::hermesvm, arm64-v8a; libjsi.so from react-android",
+        "aar": "hermes-android-260318099.0.2-release.aar",
+        "abi": "arm64-v8a",
+        "include": "include",
+        "jsi": "jni/arm64-v8a/libjsi.so",
+        "minSdk": 24
+      },
+      "android-arm32": {
+        "slice": "hermes-android .aar, prefab hermes-engine::hermesvm, armeabi-v7a; libjsi.so from react-android",
+        "aar": "hermes-android-260318099.0.2-release.aar",
+        "abi": "armeabi-v7a",
+        "include": "include",
+        "jsi": "jni/armeabi-v7a/libjsi.so",
+        "minSdk": 24
+      }
+    },
+    "targetNote": "Unlike ANGLE, Hermes publishes first-class tvos-arm64 and tvos-arm64_x86_64-simulator slices, so retag-macho.py is never applied here. macOS is a separate versioned framework under Frameworks/macosx -- the xcframework has no macos slice, only ios-arm64_x86_64-maccatalyst.",
+    "compiler": {
+      "_comment": "hermesc moved out of the react-native tarball in 0.87. The npm package version is the Hermes version, which is what keeps compiler and engine on one commit.",
+      "package": "hermes-compiler",
+      "url": "https://registry.npmjs.org/hermes-compiler/-/hermes-compiler-{version}.tgz",
+      "asset": "hermes-compiler-260318099.0.2.tgz",
+      "sha256": "4fede970879473c0c972cd14508a2f09e6e1284fc1af61351168aa241ddd703d",
+      "size": 19350430,
+      "format": "tar.gz",
+      "stripComponents": 1,
+      "hosts": {
+        "darwin": "hermesc/osx-bin/hermesc",
+        "linux": "hermesc/linux64-bin/hermesc",
+        "win32": "hermesc/win64-bin/hermesc.exe"
+      }
+    },
+    "linux": {
+      "_comment": "React Native publishes no Linux runtime, so this one is ours: built from the same Hermes commit as the Apple framework and hermesc, by tools/prebuilts/recipes/hermes-linux/build.sh, and pinned here by sha256 like any other archive.",
+      "tag": "hermes-v260318099.0.2",
+      "commit": "4188b63f24026ca62b79dc81d95db122a59c6089",
+      "source": "facebook/hermes at the commit above, built by tools/prebuilts/recipes/hermes-linux",
+      "url": null,
+      "urlNote": "Not hosted yet. fetch.mjs takes the archive from $SCREENKIT_PREBUILTS_MIRROR or tools/prebuilts/dist/ (the recipe's output) until this is set; {asset} and {version} are substituted."
+    },
+    "unavailable": {
+      "windows-x86_64": "No Hermes runtime is published for Windows; only the win64 hermesc host compiler, which the compiler block already covers.",
+      "windows-arm64": "Same as windows-x86_64.",
+      "android-x86_64": "Published, and deferred by choice: hermes-android and react-android both carry x86_64, but the Android build targets the ABIs TV devices ship (arm64-v8a, armeabi-v7a) and an arm64 Mac runs the arm64 emulator image. Adding it is a targets entry here and an abiFilter in runtime/android/app/build.gradle (deferred-work.md)."
+    }
+  }
+}

@@ -1,0 +1,5 @@
+node_modules/
+dist/
+dist-screenkit/
+app.skpkg/
+app.skpkg.js

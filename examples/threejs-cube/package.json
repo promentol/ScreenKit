@@ -1,0 +1,23 @@
+{
+  "name": "screenkit-example-threejs-cube",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "A spinning three.js cube, built with Vite -- an ordinary WebGL app on ScreenKit.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:screenkit": "vite build --config vite.screenkit.config.js && screenkit bundle"
+  },
+  "dependencies": {
+    "three": "^0.186.0"
+  },
+  "devDependencies": {
+    "@screenkit/cli": "*",
+    "@screenkit/vite-plugin": "*",
+    "@vitejs/plugin-legacy": "^8.2.3",
+    "terser": "^5.51.2",
+    "vite": "^8.2.2"
+  }
+}

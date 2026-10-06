@@ -1,0 +1,6 @@
+// Android Gradle Plugin 8.13, on the Gradle the wrapper pins (8.14.3). Every
+// artifact Gradle resolves -- the plugin and its dependencies, fbjni -- is
+// checked against gradle/verification-metadata.xml.
+plugins {
+    id 'com.android.application' version '8.13.2' apply false
+}

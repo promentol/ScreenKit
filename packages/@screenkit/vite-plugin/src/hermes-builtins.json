@@ -1,0 +1,136 @@
+{
+  "_comment": [
+    "Every ES2015-ES2023 built-in (Annex B included) the pinned Hermes lacks. The hermes-builtins ctest row probes the engine and fails unless its missing set is exactly this list, so a Hermes pin that gains or loses one fails the suite rather than drifting.",
+    "plugin-legacy picks core-js polyfills for the browsers in `targets`, not for Hermes, and every browser those targets name has these -- so none would be included. screenkit() adds each entry's `polyfill` (a core-js module) to the legacy polyfills bundle explicitly. An entry without one says why it cannot be polyfilled."
+  ],
+  "hermes": "260318099.0.2",
+  "missing": [
+    {
+      "builtin": "Symbol.species",
+      "edition": "ES2015",
+      "polyfill": null,
+      "why": "The engine does not honour @@species, so defining the symbol would only make species checks lie -- and core-js reads a lying check as a broken native and swaps in slower Array methods."
+    },
+    {
+      "builtin": "Symbol.unscopables",
+      "edition": "ES2015",
+      "polyfill": null,
+      "why": "Only a `with` statement reads it, and hermesc refuses `with` at build time."
+    },
+    {
+      "builtin": "Promise.prototype[@@toStringTag]",
+      "edition": "ES2015",
+      "polyfill": null,
+      "why": "No standalone core-js module sets it: only es.promise does, by replacing the engine's native Promise, which a toString tag does not justify. Object.prototype.toString.call(aPromise) reads [object Object]."
+    },
+    {
+      "builtin": "SharedArrayBuffer",
+      "edition": "ES2017",
+      "polyfill": null,
+      "why": "Shared memory needs a second thread to share with, and there are no Workers (runtime/js/README.md). Not polyfillable."
+    },
+    {
+      "builtin": "Atomics",
+      "edition": "ES2017",
+      "polyfill": null,
+      "why": "Operates on SharedArrayBuffer, which does not exist here. Not polyfillable."
+    },
+    {
+      "builtin": "Function.prototype.toString source text",
+      "edition": "ES2019",
+      "polyfill": null,
+      "why": "Bytecode carries no source, so a compiled function prints as `function f(a0) { [bytecode] }`. Not polyfillable; code that parses function source breaks."
+    },
+    {
+      "builtin": "Array.prototype.toSorted",
+      "edition": "ES2023",
+      "polyfill": "es.array.to-sorted"
+    },
+    {
+      "builtin": "%TypedArray%.prototype.toReversed",
+      "edition": "ES2023",
+      "polyfill": "es.typed-array.to-reversed"
+    },
+    {
+      "builtin": "%TypedArray%.prototype.toSorted",
+      "edition": "ES2023",
+      "polyfill": "es.typed-array.to-sorted"
+    },
+    {
+      "builtin": "%TypedArray%.prototype.with",
+      "edition": "ES2023",
+      "polyfill": "es.typed-array.with"
+    },
+    {
+      "builtin": "String.prototype.anchor",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.anchor"
+    },
+    {
+      "builtin": "String.prototype.big",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.big"
+    },
+    {
+      "builtin": "String.prototype.blink",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.blink"
+    },
+    {
+      "builtin": "String.prototype.bold",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.bold"
+    },
+    {
+      "builtin": "String.prototype.fixed",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.fixed"
+    },
+    {
+      "builtin": "String.prototype.fontcolor",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.fontcolor"
+    },
+    {
+      "builtin": "String.prototype.fontsize",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.fontsize"
+    },
+    {
+      "builtin": "String.prototype.italics",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.italics"
+    },
+    {
+      "builtin": "String.prototype.link",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.link"
+    },
+    {
+      "builtin": "String.prototype.small",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.small"
+    },
+    {
+      "builtin": "String.prototype.strike",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.strike"
+    },
+    {
+      "builtin": "String.prototype.sub",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.sub"
+    },
+    {
+      "builtin": "String.prototype.sup",
+      "edition": "ES2015 Annex B",
+      "polyfill": "es.string.sup"
+    },
+    {
+      "builtin": "RegExp.prototype.compile",
+      "edition": "ES2015 Annex B",
+      "polyfill": null,
+      "why": "core-js has no polyfill for it. It recompiles a RegExp in place, a legacy API nothing measured uses."
+    }
+  ]
+}

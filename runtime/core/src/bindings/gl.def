@@ -1,0 +1,195 @@
+// Copyright (c) ScreenKit contributors. MIT.
+//
+// The GLES entry points reachable from JS, as a table rather than as a hundred
+// hand-written host functions. `expo-gl/common/EXGLNativeMethods.def` is the
+// same technique; Architecture.md 9 records it as the way this layer is built.
+//
+// **Scope.** This is deliberately only what a triangle needs: clear and
+// viewport, shader compile plus info log, program link plus info log, buffers,
+// vertex attributes, uniforms, `drawArrays` and `getError`. No textures, no
+// framebuffers, no WebGL2 surface. There is no `WebGLRenderingContext` here and
+// no validation layer -- JS sees the integer handles GL itself uses, and the
+// object model lives above this, in JS.
+//
+// Three kinds of row, all expanded by WebGL.cpp:
+//
+//   GL_FN(jsName, glFunction)
+//       Every argument is a number and the result is void or a number, so the
+//       whole wrapper is deduced from the C function's own type. Adding a row
+//       here costs one line and cannot get the argument order wrong.
+//
+//   GL_ADAPTED(jsName, argCount)
+//       Strings, out-parameters or a buffer pointer, so the C signature cannot
+//       be driven from JS values directly. The body is `adapt_<jsName>` in
+//       WebGL.cpp. Listing them here anyway keeps this file the single
+//       enumeration of the surface.
+//
+//   GL_CONST(name)
+//       `GL_<name>` reachable as `gl.<name>`. Without these the entry points
+//       above are unusable -- there is no enum object in JS to borrow from.
+
+#ifndef GL_FN
+#define GL_FN(jsName, glFunction)
+#endif
+#ifndef GL_ADAPTED
+#define GL_ADAPTED(jsName, argCount)
+#endif
+#ifndef GL_CONST
+#define GL_CONST(name)
+#endif
+
+// ---- framebuffer state ------------------------------------------------------
+GL_FN(clear, glClear)
+GL_FN(clearColor, glClearColor)
+GL_FN(viewport, glViewport)
+GL_FN(enable, glEnable)
+GL_FN(disable, glDisable)
+GL_FN(finish, glFinish)
+GL_FN(flush, glFlush)
+
+// ---- shaders ----------------------------------------------------------------
+GL_FN(createShader, glCreateShader)
+GL_FN(compileShader, glCompileShader)
+GL_FN(deleteShader, glDeleteShader)
+GL_ADAPTED(shaderSource, 2)
+GL_ADAPTED(getShaderiv, 2)
+GL_ADAPTED(getShaderInfoLog, 1)
+
+// ---- programs ---------------------------------------------------------------
+GL_FN(createProgram, glCreateProgram)
+GL_FN(attachShader, glAttachShader)
+GL_FN(detachShader, glDetachShader)
+GL_FN(linkProgram, glLinkProgram)
+GL_FN(useProgram, glUseProgram)
+GL_FN(deleteProgram, glDeleteProgram)
+GL_ADAPTED(getProgramiv, 2)
+GL_ADAPTED(getProgramInfoLog, 1)
+
+// ---- buffers ----------------------------------------------------------------
+// GL's gen/delete take a count and an array. Nothing in this milestone ever
+// wants more than one object at a time, so these expand to the single-object
+// form and return the name directly. The plural spelling is kept because it is
+// GL's, and because the array form is the natural extension when a spec needs
+// it.
+GL_FN(bindBuffer, glBindBuffer)
+GL_ADAPTED(genBuffers, 0)
+GL_ADAPTED(deleteBuffers, 1)
+GL_ADAPTED(bufferData, 3)
+
+// ---- vertex arrays and attributes -------------------------------------------
+GL_FN(bindVertexArray, glBindVertexArray)
+GL_FN(enableVertexAttribArray, glEnableVertexAttribArray)
+GL_FN(disableVertexAttribArray, glDisableVertexAttribArray)
+GL_FN(vertexAttribDivisor, glVertexAttribDivisor)
+GL_ADAPTED(genVertexArrays, 0)
+GL_ADAPTED(deleteVertexArrays, 1)
+GL_ADAPTED(vertexAttribPointer, 6)
+GL_ADAPTED(getAttribLocation, 2)
+GL_ADAPTED(bindAttribLocation, 3)
+
+// ---- uniforms ---------------------------------------------------------------
+GL_FN(uniform1f, glUniform1f)
+GL_FN(uniform2f, glUniform2f)
+GL_FN(uniform3f, glUniform3f)
+GL_FN(uniform4f, glUniform4f)
+GL_FN(uniform1i, glUniform1i)
+GL_FN(uniform2i, glUniform2i)
+GL_FN(uniform3i, glUniform3i)
+GL_FN(uniform4i, glUniform4i)
+GL_ADAPTED(getUniformLocation, 2)
+GL_ADAPTED(uniformMatrix4fv, 3)
+
+// ---- drawing ----------------------------------------------------------------
+GL_FN(drawArrays, glDrawArrays)
+GL_FN(drawArraysInstanced, glDrawArraysInstanced)
+
+// Reads back out of the drawable, into a caller-supplied typed array. It is the
+// only entry point here that writes into the JS heap, and it is what lets the
+// headless rows assert that a triangle was actually drawn rather than that no
+// error was reported.
+GL_ADAPTED(readPixels, 7)
+
+// ---- queries ----------------------------------------------------------------
+GL_FN(getError, glGetError)
+GL_ADAPTED(getString, 1)
+GL_ADAPTED(getIntegerv, 1)
+
+// Not GL: the drawable's live size, which a `viewport` call needs and which no
+// GLES entry point reports. Functions rather than the WebGL
+// `drawingBufferWidth` properties, because a property would be a snapshot and
+// this is read fresh from `eglQuerySurface` every call.
+GL_ADAPTED(surfaceWidth, 0)
+GL_ADAPTED(surfaceHeight, 0)
+
+// ---- constants --------------------------------------------------------------
+GL_CONST(FALSE)
+GL_CONST(TRUE)
+
+GL_CONST(COLOR_BUFFER_BIT)
+GL_CONST(DEPTH_BUFFER_BIT)
+GL_CONST(STENCIL_BUFFER_BIT)
+
+GL_CONST(DEPTH_TEST)
+GL_CONST(STENCIL_TEST)
+GL_CONST(CULL_FACE)
+GL_CONST(BLEND)
+GL_CONST(SCISSOR_TEST)
+GL_CONST(DITHER)
+
+GL_CONST(POINTS)
+GL_CONST(LINES)
+GL_CONST(LINE_LOOP)
+GL_CONST(LINE_STRIP)
+GL_CONST(TRIANGLES)
+GL_CONST(TRIANGLE_STRIP)
+GL_CONST(TRIANGLE_FAN)
+
+GL_CONST(VERTEX_SHADER)
+GL_CONST(FRAGMENT_SHADER)
+GL_CONST(COMPILE_STATUS)
+GL_CONST(LINK_STATUS)
+GL_CONST(VALIDATE_STATUS)
+GL_CONST(DELETE_STATUS)
+GL_CONST(INFO_LOG_LENGTH)
+GL_CONST(SHADER_TYPE)
+GL_CONST(ATTACHED_SHADERS)
+GL_CONST(ACTIVE_ATTRIBUTES)
+GL_CONST(ACTIVE_UNIFORMS)
+
+GL_CONST(ARRAY_BUFFER)
+GL_CONST(ELEMENT_ARRAY_BUFFER)
+GL_CONST(STATIC_DRAW)
+GL_CONST(DYNAMIC_DRAW)
+GL_CONST(STREAM_DRAW)
+
+GL_CONST(BYTE)
+GL_CONST(UNSIGNED_BYTE)
+GL_CONST(SHORT)
+GL_CONST(UNSIGNED_SHORT)
+GL_CONST(INT)
+GL_CONST(UNSIGNED_INT)
+GL_CONST(FLOAT)
+
+GL_CONST(RGBA)
+
+GL_CONST(NO_ERROR)
+GL_CONST(INVALID_ENUM)
+GL_CONST(INVALID_VALUE)
+GL_CONST(INVALID_OPERATION)
+GL_CONST(INVALID_FRAMEBUFFER_OPERATION)
+GL_CONST(OUT_OF_MEMORY)
+
+GL_CONST(VENDOR)
+GL_CONST(RENDERER)
+GL_CONST(VERSION)
+GL_CONST(SHADING_LANGUAGE_VERSION)
+
+GL_CONST(MAX_VERTEX_ATTRIBS)
+GL_CONST(MAX_VERTEX_UNIFORM_VECTORS)
+GL_CONST(MAX_FRAGMENT_UNIFORM_VECTORS)
+GL_CONST(MAX_TEXTURE_SIZE)
+GL_CONST(NUM_EXTENSIONS)
+
+#undef GL_FN
+#undef GL_ADAPTED
+#undef GL_CONST

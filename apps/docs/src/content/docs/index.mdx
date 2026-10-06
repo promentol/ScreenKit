@@ -1,0 +1,63 @@
+---
+title: ScreenKit
+description: Run an ordinary web build on TV hardware — Hermes, WebGL and a DOM shim over SDL3, on tvOS, Android TV, Fire TV and embedded Linux.
+template: splash
+hero:
+  tagline: Take whatever <code>vite build</code> emits and run it on a television. No browser, no WebView, no native compile per app.
+  actions:
+    - text: What ScreenKit is
+      link: /start/what-screenkit-is/
+      icon: right-arrow
+      variant: primary
+    - text: Quickstart
+      link: /start/quickstart/
+      icon: rocket
+    - text: See it running
+      link: /examples/
+      icon: laptop
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+## The shape of it
+
+ScreenKit is a prebuilt native runtime. An app is a web build plus its assets, and it never triggers
+a native compile — adding a native capability means shipping a **new runtime version**, not
+rebuilding every app. The model is Capacitor's, not Expo's.
+
+<CardGrid stagger>
+  <Card title="A real element tree" icon="document">
+    `document`, `Element`, events that capture and bubble, a selector subset, and a
+    `CSSStyleDeclaration` on everything. Libraries that build DOM structure keep working.
+  </Card>
+  <Card title="Three elements paint" icon="laptop">
+    `<canvas>`, `<video>` and `<iframe>` have something native behind them. Every other tag is
+    inert: it lives in the tree, dispatches events, and never renders.
+  </Card>
+  <Card title="Native where it must be" icon="setting">
+    SDL3, Hermes, GL contexts, the compositor and the platform media players are C++. The browser
+    — the DOM, the WebGL object model, the CSS subset — is JavaScript.
+  </Card>
+  <Card title="Four targets, one package" icon="puzzle">
+    tvOS, Android TV, Fire TV and embedded Linux run the same `.skpkg`. Where the platforms
+    genuinely differ, the difference is written down rather than papered over.
+  </Card>
+  <Card title="Your Shaka code, unmodified" icon="seti:video">
+    `shaka-player` resolves to a player that [mirrors Shaka Player 5](/reference/shaka/) over
+    AVPlayer, ExoPlayer and libvlc — same `Player`, same filters, same error codes.
+  </Card>
+</CardGrid>
+
+## What it is not
+
+It is not a browser. There is no layout engine, no cascade for anything that does not composite, no
+HTML parsing at runtime, and no Web Workers. `index.html` is read as a **manifest of entry points**,
+never as markup. That is the trade that makes a 60 fps UI on a $30 box possible, and the
+[environment contract](/reference/environment/) enumerates exactly what you get.
+
+## What actually runs
+
+Nine apps in `examples/` — Pixi, Phaser, three.js, Lightning 3, and a whole upstream Blits app with
+its `src/` untouched. [Every one has a screenshot](/examples/) captured by the runtime itself, and a
+page saying what it proves and where it stops.

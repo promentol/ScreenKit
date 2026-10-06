@@ -1,0 +1,16 @@
+{
+  "name": "screenkit-dom-usage",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Reports which host/DOM globals a built JS bundle actually uses, so the shim can be scoped to evidence rather than guesswork.",
+  "bin": {
+    "dom-usage": "./analyze.mjs"
+  },
+  "dependencies": {
+    "acorn": "^8.14.0",
+    "acorn-walk": "^8.3.4",
+    "eslint-scope": "^8.2.0",
+    "playwright": "^1.63.0"
+  }
+}

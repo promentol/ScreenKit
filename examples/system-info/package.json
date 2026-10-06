@@ -1,0 +1,20 @@
+{
+  "name": "screenkit-example-system-info",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "What the device is: CPU, GPU and memory, on screen. No engine -- canvas text uploaded through WebGL.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:screenkit": "vite build --config vite.screenkit.config.js && screenkit bundle"
+  },
+  "devDependencies": {
+    "@screenkit/cli": "*",
+    "@screenkit/vite-plugin": "*",
+    "@vitejs/plugin-legacy": "^8.2.3",
+    "terser": "^5.51.2",
+    "vite": "^8.2.2"
+  }
+}

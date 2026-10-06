@@ -1,0 +1,164 @@
+{
+  "url": "http://localhost:5177/",
+  "seconds": 6,
+  "pageErrors": [],
+  "types": {
+    "Document": {
+      "createElement": {
+        "count": 2,
+        "args": [
+          "link",
+          "canvas"
+        ]
+      },
+      "getElementById": {
+        "count": 1,
+        "args": [
+          "app"
+        ]
+      }
+    },
+    "URL": {
+      "createObjectURL": 1
+    },
+    "Worker": {
+      "onmessage =": 12
+    },
+    "HTMLCanvasElement": {
+      "width": 11,
+      "height": 11,
+      "width =": 1,
+      "height =": 1,
+      "getContext": {
+        "count": 1,
+        "args": [
+          "webgl"
+        ]
+      }
+    },
+    "HTMLElement": {
+      "style": 3
+    },
+    "Performance": {
+      "now": 348
+    },
+    "WebGLRenderingContext": {
+      "getParameter": 44,
+      "enableVertexAttribArray": 40,
+      "vertexAttribPointer": 40,
+      "bindBuffer": 23,
+      "activeTexture": 16,
+      "getActiveAttrib": 13,
+      "getAttribLocation": {
+        "count": 13,
+        "args": [
+          "a_position",
+          "a_textureCoords",
+          "a_color",
+          "a_nodeCoords",
+          "a_distRange",
+          "a_style"
+        ]
+      },
+      "getUniformLocation": {
+        "count": 12,
+        "args": [
+          "u_resolution",
+          "u_pixelRatio",
+          "u_texture",
+          "u_dimensions"
+        ]
+      },
+      "texParameteri": 12,
+      "bindTexture": 11,
+      "drawElements": 10,
+      "getExtension": {
+        "count": 9,
+        "args": [
+          "ANGLE_instanced_arrays",
+          "WEBGL_compressed_texture_s3tc",
+          "WEBGL_compressed_texture_astc",
+          "WEBGL_compressed_texture_etc",
+          "WEBGL_compressed_texture_etc1",
+          "WEBGL_compressed_texture_pvrtc",
+          "WEBKIT_WEBGL_compressed_texture_pvrtc",
+          "WEBGL_compressed_texture_s3tc_srgb",
+          "OES_vertex_array_object"
+        ]
+      },
+      "getProgramParameter": 9,
+      "getActiveUniform": 9,
+      "createBuffer": 6,
+      "createShader": 6,
+      "shaderSource": {
+        "count": 6,
+        "args": [
+          "\n    # ifdef GL_FRAGMENT_PRECISION_HIGH\n    precision highp float;\n    # else\n    precision mediump float;\n    # endif\n\n    attribute vec2 a_position;\n    attribute vec2 a_textureCoords;\n    attribute vec4 a_color;\n    attribute vec2 a_nodeCoords;\n\n    uniform vec2 u_resolution;\n    uniform float u_pixelRatio;\n\n    varying vec4 v_color;\n    varying vec2 v_textureCoords;\n    varying vec2 v_nodeCoords;\n\n    void main() {\n      vec2 normalized = a_position * u_pixelRatio / u_resolution;\n      vec2 zero_two = normalized * 2.0;\n      vec2 clip_space = zero_two - 1.0;\n\n      v_color = a_color;\n      v_textureCoords = a_textureCoords;\n      v_nodeCoords = a_nodeCoords;\n\n      gl_Position = vec4(clip_space * vec2(1.0, -1.0), 0, 1);\n    }\n  ",
+          "\n    # ifdef GL_FRAGMENT_PRECISION_HIGH\n    precision highp float;\n    # else\n    precision mediump float;\n    # endif\n\n    uniform vec2 u_resolution;\n    uniform sampler2D u_texture;\n\n    varying vec4 v_color;\n    varying vec2 v_textureCoords;\n\n    void main() {\n      gl_FragColor = v_color * texture2D(u_texture, v_textureCoords);\n    }\n  ",
+          "\n    # ifdef GL_FRAGMENT_PRECISION_HIGH\n    precision highp float;\n    # else\n    precision mediump float;\n    # endif\n    \n  // Pre-transformed world-pixel position\n  attribute vec2 a_position;\n  attribute vec2 a_textureCoords;\n  // Per-vertex color (RGBA, unsigned byte, normalized). Carries the node tint\n  // (with world alpha) merged with any span color override.\n  attribute vec4 a_color;\n  // Per-vertex SDF distance range (font-specific)\n  attribute float a_distRange;\n\n  uniform vec2 u_resolution;\n  uniform float u_pixelRatio;\n\n  varying vec2 v_texcoord;\n  varying float v_scaledDistRange;\n  varying vec4 v_color;\n\n    // Per-vertex style flag: 0.0 = normal, 1.0 = bold.\n    attribute float a_style;\n\n    varying float v_style;\n\n    void main() {\n      vec2 screenSpace = (a_position * u_pixelRatio / u_resolution * 2.0 - 1.0) * vec2(1, -1);\n\n      gl_Position = vec4(screenSpace, 0.0, 1.0);\n      v_texcoord = a_textureCoords;\n      v_scaledDistRange = a_distRange * u_pixelRatio;\n      v_color = a_color;\n      v_style = a_style;\n    }\n  ",
+          "\n    # ifdef GL_FRAGMENT_PRECISION_HIGH\n    precision highp float;\n    # else\n    precision mediump float;\n    # endif\n    uniform sampler2D u_texture;\n\n    varying vec2 v_texcoord;\n    varying float v_scaledDistRange;\n    varying vec4 v_color;\n    varying float v_style;\n\n    float median(float r, float g, float b) {\n        return clamp(b, min(r, g), max(r, g));\n    }\n\n    void main() {\n        // Decoration quads use u = -1.0 as a sentinel for solid-fill (no SDF lookup).\n        // step(0.5, -u): 1.0 when u <= -0.5 — safely catches only the -1.0 sentinel.\n        // Cannot use step(0.0, -u) because that also catches u = 0.0, which is a\n        // valid atlas coordinate for any glyph packed at the left edge of the atlas.\n        float isSolid = step(0.5, -v_texcoord.x);\n\n        // SDF path — runs unconditionally; result is masked out for solid quads via\n        // mix() below. Sampling with u = -1.0 is safe: the atlas uses CLAMP_TO_EDGE\n        // so it returns the leftmost texel column, but the result is zeroed by mix().\n        vec3 s = texture2D(u_texture, v_texcoord).rgb;\n        // Bold shifts the SDF threshold down by 0.05, expanding glyph edges.\n        // v_style: 0.0 = normal, 1.0 = bold.\n        float threshold = 0.5 - v_style * 0.05;\n        float sigDist = v_scaledDistRange * (median(s.r, s.g, s.b) - threshold);\n        // v_color already carries node tint × world alpha × span override.\n        float opacity = clamp(sigDist + threshold, 0.0, 1.0) * v_color.a;\n        vec3 col = v_color.rgb;\n        // IMPORTANT: premultiply before returning.\n        vec4 sdfResult = vec4(col * opacity, opacity);\n\n        // Solid fill path — premultiplied alpha.\n        vec4 fc = v_color;\n        vec4 solidResult = vec4(fc.rgb * fc.a, fc.a);\n\n        gl_FragColor = mix(sdfResult, solidResult, isSolid);\n    }\n  ",
+          "\n    # ifdef GL_FRAGMENT_PRECISION_HIGH\n    precision highp float;\n    # else\n    precision mediump float;\n    # endif\n    \n  // Pre-transformed world-pixel position\n  attribute vec2 a_position;\n  attribute vec2 a_textureCoords;\n  // Per-vertex color (RGBA, unsigned byte, normalized). Carries the node tint\n  // (with world alpha) merged with any span color override.\n  attribute vec4 a_color;\n  // Per-vertex SDF distance range (font-specific)\n  attribute float a_distRange;\n\n  uniform vec2 u_resolution;\n  uniform float u_pixelRatio;\n\n  varying vec2 v_texcoord;\n  varying float v_scaledDistRange;\n  varying vec4 v_color;\n\n    \n  void main() {\n    // a_position is already in world pixel space (pre-transformed on CPU)\n    vec2 screenSpace = (a_position * u_pixelRatio / u_resolution * 2.0 - 1.0) * vec2(1, -1);\n\n    gl_Position = vec4(screenSpace, 0.0, 1.0);\n    v_texcoord = a_textureCoords;\n    v_scaledDistRange = a_distRange * u_pixelRatio;\n    v_color = a_color;\n  }\n\n  ",
+          "\n    # ifdef GL_FRAGMENT_PRECISION_HIGH\n    precision highp float;\n    # else\n    precision mediump float;\n    # endif\n    uniform sampler2D u_texture;\n\n    varying vec2 v_texcoord;\n    varying float v_scaledDistRange;\n    varying vec4 v_color;\n\n    float median(float r, float g, float b) {\n        return clamp(b, min(r, g), max(r, g));\n    }\n\n    void main() {\n        vec3 s = texture2D(u_texture, v_texcoord).rgb;\n        float sigDist = v_scaledDistRange * (median(s.r, s.g, s.b) - 0.5);\n        float opacity = clamp(sigDist + 0.5, 0.0, 1.0) * v_color.a;\n\n        // IMPORTANT: We must premultiply the color by the alpha value before returning it.\n        gl_FragColor = vec4(v_color.rgb * opacity, opacity);\n    }\n  "
+        ]
+      },
+      "compileShader": 6,
+      "getShaderParameter": 6,
+      "attachShader": 6,
+      "texImage2D": 6,
+      "bufferData": 5,
+      "clear": 4,
+      "isEnabled": 3,
+      "createProgram": 3,
+      "linkProgram": 3,
+      "createTexture": 3,
+      "pixelStorei": 3,
+      "canvas": 1,
+      "viewport": 1,
+      "enable": 1,
+      "blendFunc": 1,
+      "useProgram": 1,
+      "uniform1f": 1,
+      "uniform2f": 1
+    },
+    "OffscreenCanvas": {
+      "width =": 3,
+      "height =": 3,
+      "getContext": {
+        "count": 2,
+        "args": [
+          "2d"
+        ]
+      },
+      "width": 2,
+      "height": 2,
+      "transferToImageBitmap": 2
+    },
+    "globalThis": {
+      "requestAnimationFrame": 688,
+      "setTimeout": 682,
+      "queueMicrotask": 14,
+      "setInterval": 2
+    },
+    "Node": {
+      "appendChild": 1
+    },
+    "ImageBitmap": {
+      "width": 2,
+      "height": 2
+    },
+    "console": {
+      "info": {
+        "count": 2,
+        "args": [
+          "%c ⚡️ Blits %c 17:47:04",
+          "background-color: #0284c7; color: white; padding: 3px 6px 3px 1px; border-radius: 3px",
+          "color: ##94a3b8;",
+          "Blits Version ",
+          "2.9.0",
+          "Renderer Version ",
+          "3.3.1"
+        ]
+      }
+    }
+  }
+}

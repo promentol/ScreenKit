@@ -1,0 +1,24 @@
+{
+  "name": "@screenkit/cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The ScreenKit command line: `screenkit bundle` turns a @screenkit/vite-plugin build into a .skpkg.",
+  "type": "module",
+  "bin": {
+    "screenkit": "./bin/screenkit.js"
+  },
+  "exports": {
+    ".": "./src/bundle.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

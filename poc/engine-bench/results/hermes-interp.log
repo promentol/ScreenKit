@@ -1,0 +1,28 @@
+[hermes off] Hermes, bytecode 99, 21.4 ms to start, RSS 7.2 MB
+[hermes off] bulk.hbc: 82.2 ms, RSS 10.5 MB
+[hermes off] workload.hbc: 17.5 ms, RSS 10.9 MB
+[hermes off] sprites      100: p50    6.27 ms  p95    6.67  max    6.75 | RSS peak   11.2 MB | gc 0, 0.0 ms
+[hermes off] sprites      400: p50   25.44 ms  p95   25.93  max   26.90 | RSS peak   11.5 MB | gc 0, 0.0 ms
+[hermes off] sprites     1600: p50  100.26 ms  p95  101.60  max  120.83 | RSS peak   14.9 MB | gc 1, 35.3 ms
+[hermes off] particles    250: p50   12.50 ms  p95   14.57  max   15.51 | RSS peak   14.8 MB | gc 0, 0.0 ms
+[hermes off] particles   1000: p50   50.76 ms  p95   52.47  max   53.80 | RSS peak   14.8 MB | gc 0, 0.0 ms
+[hermes off] particles   4000: p50  208.59 ms  p95  213.64  max  225.97 | RSS peak   16.2 MB | gc 2, 20.6 ms
+[hermes off] platformer    10: p50    6.54 ms  p95    7.07  max    7.23 | RSS peak   20.8 MB | gc 0, 0.0 ms
+[hermes off] platformer    50: p50   10.67 ms  p95   11.70  max   19.51 | RSS peak   25.7 MB | gc 1, 8.3 ms
+[hermes off] platformer   200: p50   27.13 ms  p95   28.67  max   33.51 | RSS peak   30.8 MB | gc 2, 8.3 ms
+[hermes off] shooter      100: p50    6.67 ms  p95    8.38  max    8.49 | RSS peak   30.9 MB | gc 0, 0.0 ms
+[hermes off] shooter      400: p50   31.69 ms  p95   32.38  max   36.28 | RSS peak   31.2 MB | gc 2, 8.1 ms
+[hermes off] shooter     1600: p50  137.53 ms  p95  143.64  max  147.33 | RSS peak   32.3 MB | gc 3, 31.0 ms
+[hermes off] puzzle        64: p50    4.45 ms  p95    6.08  max    6.87 | RSS peak   32.7 MB | gc 0, 0.0 ms
+[hermes off] puzzle       256: p50   17.59 ms  p95   25.16  max   25.92 | RSS peak   32.7 MB | gc 0, 0.0 ms
+[hermes off] puzzle      1024: p50   69.65 ms  p95  106.61  max  113.94 | RSS peak   34.1 MB | gc 1, 17.9 ms
+[hermes off] swarm         50: p50    5.10 ms  p95    5.65  max   54.04 | RSS peak   34.4 MB | gc 1, 12.6 ms
+[hermes off] swarm        200: p50   23.63 ms  p95   24.72  max   26.34 | RSS peak   34.7 MB | gc 2, 10.2 ms
+[hermes off] swarm        500: p50   75.94 ms  p95   77.48  max   81.59 | RSS peak   34.9 MB | gc 5, 23.4 ms
+[hermes off] vector         3: p50   24.27 ms  p95   24.68  max   28.03 | RSS peak   35.7 MB | gc 2, 6.2 ms
+[hermes off] vector        12: p50   96.49 ms  p95   98.64  max   99.33 | RSS peak   35.7 MB | gc 11, 25.9 ms
+[hermes off] vector        48: p50  388.26 ms  p95  394.02  max  395.61 | RSS peak   35.8 MB | gc 40, 100.2 ms
+[hermes off] ui             5: p50    7.56 ms  p95    7.77  max   10.66 | RSS peak   35.8 MB | gc 1, 2.8 ms
+[hermes off] ui            20: p50   26.95 ms  p95   27.72  max   30.62 | RSS peak   35.8 MB | gc 4, 12.9 ms
+[hermes off] ui            80: p50  105.22 ms  p95  109.86  max  113.13 | RSS peak   35.8 MB | gc 13, 66.1 ms
+report: results/hermes-interp.json

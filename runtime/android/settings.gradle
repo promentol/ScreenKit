@@ -1,0 +1,23 @@
+// The Android TV / Fire TV shell: one app module. Its own sources are Java only
+// and the DSL is Groovy rather than Kotlin script, but the build is no longer
+// Kotlin-free: OkHttp -- the platform HTTP client this host uses
+// (spec-platform-http-clients.md) -- is a Kotlin library, so kotlin-stdlib and
+// okio come in with it, pinned by sha256 in gradle/verification-metadata.xml
+// like every other resolved artifact (runtime/README.md).
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'screenkit-android'
+include ':app'

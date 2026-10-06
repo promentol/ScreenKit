@@ -1,0 +1,1303 @@
+{
+  "label": "sm-jit",
+  "machine": {
+    "cpu": "Raspberry Pi 3 Model B Plus Rev 1.3",
+    "cores": 4,
+    "kernel": "6.12.25-v8",
+    "memTotalKb": 930188,
+    "cpuMaxFreqKHz": 1400000,
+    "governor": "performance",
+    "now": {
+      "cpuFreqKHz": 1400000,
+      "temperatureC": 49.39,
+      "loadavg": "1.41 1.59 1.26 1/173 14680",
+      "memAvailableKb": 572576,
+      "throttled": 327685.0,
+      "armClockHz": 600000000.0
+    }
+  },
+  "engine": "spidermonkey",
+  "version": "JavaScript-C128.14.0",
+  "mode": "on",
+  "settings": {
+    "library": "/userdata/engine-bench/spidermonkey/lib/libmozjs-128.so.0",
+    "jit": "on",
+    "jitOptions": {
+      "baselineInterpreter": 1,
+      "baseline": 1,
+      "ion": 1,
+      "baselineWarmupThreshold": 100,
+      "ionNormalWarmupThreshold": 1500,
+      "offThreadCompilation": 1
+    },
+    "maxNurseryBytes": 67108864,
+    "minNurseryBytes": 262144,
+    "incrementalGc": false,
+    "sliceMs": 0,
+    "helperThreads": 2,
+    "stencilBuildId": "screenkit-mozjs/JavaScript-C128.14.0/64",
+    "scripts": {
+      "js/bulk.js": "source",
+      "js/workload.js": "source"
+    }
+  },
+  "options": {
+    "workload": "js/workload.js",
+    "frames": 180,
+    "warmup": 30,
+    "pace": 0,
+    "budgetMs": 16.67,
+    "scale": 1,
+    "view": "640x480",
+    "params": {},
+    "preload": [
+      "js/bulk.js"
+    ]
+  },
+  "workload": {"workload":"phaser-shaped","version":1,"view":{"width":640,"height":480},"scenes":[{"name":"sprites","unit":"sprites","loads":[100,400,1600]},{"name":"particles","unit":"particles","loads":[250,1000,4000]},{"name":"platformer","unit":"enemies","loads":[10,50,200]},{"name":"shooter","unit":"bullets","loads":[100,400,1600]},{"name":"puzzle","unit":"gems","loads":[64,256,1024]},{"name":"swarm","unit":"bodies","loads":[50,200,500]},{"name":"vector","unit":"shapes","loads":[3,12,48]},{"name":"ui","unit":"panels","loads":[5,20,80]}]},
+  "startup": [
+    {
+      "step": "process",
+      "ms": 0,
+      "memory": {
+        "rssKb": 5596,
+        "rssAnonKb": 640,
+        "rssFileKb": 4956,
+        "hwmKb": 5596,
+        "pssKb": 3924,
+        "privateDirtyKb": 696,
+        "vmSizeKb": 40208,
+        "swapKb": 0,
+        "threads": 1
+      },
+      "heap": {
+        "usedBytes": -1,
+        "reservedBytes": -1,
+        "collections": -1,
+        "pauseMs": -1,
+        "backgroundMs": -1,
+        "raw": {}
+      }
+    },
+    {
+      "step": "engine",
+      "ms": 159.4,
+      "memory": {
+        "rssKb": 16404,
+        "rssAnonKb": 3368,
+        "rssFileKb": 13036,
+        "hwmKb": 16404,
+        "pssKb": 14734,
+        "privateDirtyKb": 3488,
+        "vmSizeKb": 2218416,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 360448.0,
+        "reservedBytes": 1310720.0,
+        "collections": 0,
+        "pauseMs": 0,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 360448.0,
+          "nurseryBytes": 262144.0,
+          "totalChunks": 1,
+          "unusedChunks": 0,
+          "gcNumber": 0,
+          "majorGcNumber": 0,
+          "minorGcNumber": 0,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 0
+        }
+      }
+    },
+    {
+      "step": "load bulk.js",
+      "ms": 792.9,
+      "memory": {
+        "rssKb": 25488,
+        "rssAnonKb": 11428,
+        "rssFileKb": 14060,
+        "hwmKb": 26852,
+        "pssKb": 23656,
+        "privateDirtyKb": 11464,
+        "vmSizeKb": 2225980,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 2187264.0,
+        "reservedBytes": 3407872.0,
+        "collections": 1,
+        "pauseMs": 6.632,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 2187264.0,
+          "nurseryBytes": 262144.0,
+          "totalChunks": 3,
+          "unusedChunks": 0,
+          "gcNumber": 1,
+          "majorGcNumber": 0,
+          "minorGcNumber": 1,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 6.632
+        }
+      }
+    },
+    {
+      "step": "load workload.js",
+      "ms": 65.84,
+      "memory": {
+        "rssKb": 25872,
+        "rssAnonKb": 11684,
+        "rssFileKb": 14188,
+        "hwmKb": 26852,
+        "pssKb": 24164,
+        "privateDirtyKb": 11780,
+        "vmSizeKb": 2225980,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 2445312.0,
+        "reservedBytes": 3407872.0,
+        "collections": 2,
+        "pauseMs": 12.97,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 2445312.0,
+          "nurseryBytes": 262144.0,
+          "totalChunks": 3,
+          "unusedChunks": 0,
+          "gcNumber": 2,
+          "majorGcNumber": 0,
+          "minorGcNumber": 2,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 12.97
+        }
+      }
+    }
+  ],
+  "segments": [
+    {
+      "scene": "platformer",
+      "load": 10,
+      "enterMs": 138,
+      "exitMs": 5.097,
+      "firstFrameMs": 39.61,
+      "steady": {
+        "count": 150,
+        "mean": 1.318,
+        "min": 0.6878,
+        "p50": 1.27,
+        "p95": 2.206,
+        "p99": 2.787,
+        "max": 3.266,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 4.584,
+        "min": 1.186,
+        "p50": 1.888,
+        "p95": 8.311,
+        "p99": 39.61,
+        "max": 39.61,
+        "overBudget": 1
+      },
+      "wallMs": 340.2,
+      "cpuMs": 463.4,
+      "cpuPerFrameMs": 2.574,
+      "peakRssKb": 33228,
+      "rssGrowthKb": 7356,
+      "gc": {
+        "collections": 1,
+        "pauseMs": 2.802,
+        "maxPauseMs": 2.802,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 33228,
+        "rssAnonKb": 18212,
+        "rssFileKb": 15016,
+        "hwmKb": 33228,
+        "pssKb": 31620,
+        "privateDirtyKb": 18452,
+        "vmSizeKb": 2427140,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 5001216.0,
+        "reservedBytes": 6553600.0,
+        "collections": 15,
+        "pauseMs": 54.57,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 5001216.0,
+          "nurseryBytes": 262144.0,
+          "totalChunks": 6,
+          "unusedChunks": 1,
+          "gcNumber": 15,
+          "majorGcNumber": 0,
+          "minorGcNumber": 15,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 54.57
+        }
+      },
+      "result": {"checksum":69081.111,"objects":14,"quadsPerFrame":170.683,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":9.078,"vertexHash":788463527}
+    },
+    {
+      "scene": "platformer",
+      "load": 50,
+      "enterMs": 104,
+      "exitMs": 2.714,
+      "firstFrameMs": 3.718,
+      "steady": {
+        "count": 150,
+        "mean": 1.503,
+        "min": 1.272,
+        "p50": 1.413,
+        "p95": 2.06,
+        "p99": 2.434,
+        "max": 4.489,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 1.509,
+        "min": 1.265,
+        "p50": 1.335,
+        "p95": 2.699,
+        "p99": 3.718,
+        "max": 3.718,
+        "overBudget": 0
+      },
+      "wallMs": 274.9,
+      "cpuMs": 300.9,
+      "cpuPerFrameMs": 1.671,
+      "peakRssKb": 37452,
+      "rssGrowthKb": 4224,
+      "gc": {
+        "collections": 1,
+        "pauseMs": 1.936,
+        "maxPauseMs": 1.936,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 37452,
+        "rssAnonKb": 22436,
+        "rssFileKb": 15016,
+        "hwmKb": 37452,
+        "pssKb": 35804,
+        "privateDirtyKb": 22636,
+        "vmSizeKb": 2431532,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 7553024.0,
+        "reservedBytes": 9961472.0,
+        "collections": 23,
+        "pauseMs": 95.19,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 7553024.0,
+          "nurseryBytes": 524288.0,
+          "totalChunks": 9,
+          "unusedChunks": 1,
+          "gcNumber": 23,
+          "majorGcNumber": 0,
+          "minorGcNumber": 23,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 95.19
+        }
+      },
+      "result": {"checksum":354534.358,"objects":54,"quadsPerFrame":174.917,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":44.844,"vertexHash":727388007}
+    },
+    {
+      "scene": "platformer",
+      "load": 200,
+      "enterMs": 111.9,
+      "exitMs": 6.753,
+      "firstFrameMs": 7.085,
+      "steady": {
+        "count": 150,
+        "mean": 4.02,
+        "min": 3.611,
+        "p50": 4.025,
+        "p95": 4.265,
+        "p99": 4.509,
+        "max": 4.536,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 4.013,
+        "min": 3.549,
+        "p50": 3.68,
+        "p95": 6.9,
+        "p99": 7.085,
+        "max": 7.085,
+        "overBudget": 0
+      },
+      "wallMs": 729.4,
+      "cpuMs": 739.3,
+      "cpuPerFrameMs": 4.107,
+      "peakRssKb": 41720,
+      "rssGrowthKb": 4104,
+      "gc": {
+        "collections": 9,
+        "pauseMs": 4.034,
+        "maxPauseMs": 2.375,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 41556,
+        "rssAnonKb": 26540,
+        "rssFileKb": 15016,
+        "hwmKb": 41720,
+        "pssKb": 39912,
+        "privateDirtyKb": 26744,
+        "vmSizeKb": 2434900,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 10272768.0,
+        "reservedBytes": 11796480.0,
+        "collections": 38,
+        "pauseMs": 139.9,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 10272768.0,
+          "nurseryBytes": 262144.0,
+          "totalChunks": 11,
+          "unusedChunks": 1,
+          "gcNumber": 38,
+          "majorGcNumber": 0,
+          "minorGcNumber": 38,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 139.9
+        }
+      },
+      "result": {"checksum":1413894.825,"objects":204,"quadsPerFrame":182.472,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":187.289,"vertexHash":727388007}
+    },
+    {
+      "scene": "shooter",
+      "load": 100,
+      "enterMs": 2.658,
+      "exitMs": 1.79,
+      "firstFrameMs": 6.538,
+      "steady": {
+        "count": 150,
+        "mean": 1.167,
+        "min": 0.8455,
+        "p50": 1.069,
+        "p95": 1.818,
+        "p99": 2.256,
+        "max": 2.928,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 2.163,
+        "min": 1.012,
+        "p50": 1.881,
+        "p95": 4.386,
+        "p99": 6.538,
+        "max": 6.538,
+        "overBudget": 0
+      },
+      "wallMs": 242.9,
+      "cpuMs": 289.1,
+      "cpuPerFrameMs": 1.606,
+      "peakRssKb": 42236,
+      "rssGrowthKb": 552,
+      "gc": {
+        "collections": 2,
+        "pauseMs": 1.615,
+        "maxPauseMs": 0.8801,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 42236,
+        "rssAnonKb": 27052,
+        "rssFileKb": 15184,
+        "hwmKb": 42236,
+        "pssKb": 40420,
+        "privateDirtyKb": 27160,
+        "vmSizeKb": 2435176,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 10313728.0,
+        "reservedBytes": 11960320.0,
+        "collections": 40,
+        "pauseMs": 141.5,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 10313728.0,
+          "nurseryBytes": 425984.0,
+          "totalChunks": 11,
+          "unusedChunks": 1,
+          "gcNumber": 40,
+          "majorGcNumber": 0,
+          "minorGcNumber": 40,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 141.5
+        }
+      },
+      "result": {"checksum":70832.692,"objects":105,"quadsPerFrame":96.889,"trianglesPerFrame":0,"drawCallsPerFrame":2,"culledPerFrame":1.939,"vertexHash":335075892}
+    },
+    {
+      "scene": "shooter",
+      "load": 400,
+      "enterMs": 1.774,
+      "exitMs": 4.938,
+      "firstFrameMs": 0.5002,
+      "steady": {
+        "count": 150,
+        "mean": 4.569,
+        "min": 2.706,
+        "p50": 4.848,
+        "p95": 5.161,
+        "p99": 5.818,
+        "max": 7.792,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 1.473,
+        "min": 0.4461,
+        "p50": 1.295,
+        "p95": 2.829,
+        "p99": 3.299,
+        "max": 3.299,
+        "overBudget": 0
+      },
+      "wallMs": 734.2,
+      "cpuMs": 740.6,
+      "cpuPerFrameMs": 4.115,
+      "peakRssKb": 43644,
+      "rssGrowthKb": 1408,
+      "gc": {
+        "collections": 2,
+        "pauseMs": 4.384,
+        "maxPauseMs": 2.767,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 43644,
+        "rssAnonKb": 28460,
+        "rssFileKb": 15184,
+        "hwmKb": 43644,
+        "pssKb": 41804,
+        "privateDirtyKb": 28544,
+        "vmSizeKb": 2437124,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 10416128.0,
+        "reservedBytes": 13221888.0,
+        "collections": 42,
+        "pauseMs": 145.9,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 10416128.0,
+          "nurseryBytes": 638976.0,
+          "totalChunks": 12,
+          "unusedChunks": 1,
+          "gcNumber": 42,
+          "majorGcNumber": 0,
+          "minorGcNumber": 42,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 145.9
+        }
+      },
+      "result": {"checksum":289461.86,"objects":405,"quadsPerFrame":331.7,"trianglesPerFrame":0,"drawCallsPerFrame":2,"culledPerFrame":7.822,"vertexHash":391746165}
+    },
+    {
+      "scene": "shooter",
+      "load": 1600,
+      "enterMs": 1.635,
+      "exitMs": 22.58,
+      "firstFrameMs": 1.052,
+      "steady": {
+        "count": 150,
+        "mean": 20.13,
+        "min": 10.23,
+        "p50": 21.01,
+        "p95": 22.59,
+        "p99": 25.55,
+        "max": 25.62,
+        "overBudget": 132
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 5.597,
+        "min": 1.052,
+        "p50": 5.056,
+        "p95": 10.08,
+        "p99": 14.05,
+        "max": 14.05,
+        "overBudget": 0
+      },
+      "wallMs": 3194,
+      "cpuMs": 3214,
+      "cpuPerFrameMs": 17.86,
+      "peakRssKb": 45444,
+      "rssGrowthKb": 1800,
+      "gc": {
+        "collections": 5,
+        "pauseMs": 25.87,
+        "maxPauseMs": 6.668,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 45444,
+        "rssAnonKb": 30260,
+        "rssFileKb": 15184,
+        "hwmKb": 45444,
+        "pssKb": 43636,
+        "privateDirtyKb": 30376,
+        "vmSizeKb": 2438348,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 11038720.0,
+        "reservedBytes": 12967936.0,
+        "collections": 47,
+        "pauseMs": 171.8,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 11038720.0,
+          "nurseryBytes": 385024.0,
+          "totalChunks": 12,
+          "unusedChunks": 1,
+          "gcNumber": 47,
+          "majorGcNumber": 0,
+          "minorGcNumber": 47,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 171.8
+        }
+      },
+      "result": {"checksum":1172791.795,"objects":1593,"quadsPerFrame":1298.278,"trianglesPerFrame":0,"drawCallsPerFrame":2,"culledPerFrame":30.367,"vertexHash":83810370}
+    },
+    {
+      "scene": "puzzle",
+      "load": 64,
+      "enterMs": 12.42,
+      "exitMs": 2.268,
+      "firstFrameMs": 6.683,
+      "steady": {
+        "count": 150,
+        "mean": 0.8754,
+        "min": 0.5637,
+        "p50": 0.6542,
+        "p95": 1.889,
+        "p99": 3.18,
+        "max": 9.334,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 1.617,
+        "min": 0.6583,
+        "p50": 1.047,
+        "p95": 6.683,
+        "p99": 7.814,
+        "max": 7.814,
+        "overBudget": 0
+      },
+      "wallMs": 182.6,
+      "cpuMs": 237.2,
+      "cpuPerFrameMs": 1.318,
+      "peakRssKb": 45700,
+      "rssGrowthKb": 256,
+      "gc": {
+        "collections": 1,
+        "pauseMs": 6.842,
+        "maxPauseMs": 6.842,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 45700,
+        "rssAnonKb": 30516,
+        "rssFileKb": 15184,
+        "hwmKb": 45700,
+        "pssKb": 43760,
+        "privateDirtyKb": 30500,
+        "vmSizeKb": 2438348,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 11206656.0,
+        "reservedBytes": 12845056.0,
+        "collections": 48,
+        "pauseMs": 178.6,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 11206656.0,
+          "nurseryBytes": 262144.0,
+          "totalChunks": 12,
+          "unusedChunks": 1,
+          "gcNumber": 48,
+          "majorGcNumber": 0,
+          "minorGcNumber": 48,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 178.6
+        }
+      },
+      "result": {"checksum":52923,"objects":64,"quadsPerFrame":64,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":0,"vertexHash":97212065}
+    },
+    {
+      "scene": "puzzle",
+      "load": 256,
+      "enterMs": 19.45,
+      "exitMs": 2.245,
+      "firstFrameMs": 3.522,
+      "steady": {
+        "count": 150,
+        "mean": 2.692,
+        "min": 2.251,
+        "p50": 2.366,
+        "p95": 3.803,
+        "p99": 5.572,
+        "max": 5.964,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 3.072,
+        "min": 2.306,
+        "p50": 2.454,
+        "p95": 6.775,
+        "p99": 7.987,
+        "max": 7.987,
+        "overBudget": 0
+      },
+      "wallMs": 499.3,
+      "cpuMs": 526.4,
+      "cpuPerFrameMs": 2.925,
+      "peakRssKb": 46084,
+      "rssGrowthKb": 384,
+      "gc": {
+        "collections": 2,
+        "pauseMs": 3.887,
+        "maxPauseMs": 3.023,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 46084,
+        "rssAnonKb": 30900,
+        "rssFileKb": 15184,
+        "hwmKb": 46084,
+        "pssKb": 44316,
+        "privateDirtyKb": 31056,
+        "vmSizeKb": 2439372,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 11390976.0,
+        "reservedBytes": 14155776.0,
+        "collections": 51,
+        "pauseMs": 184,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 11390976.0,
+          "nurseryBytes": 524288.0,
+          "totalChunks": 13,
+          "unusedChunks": 1,
+          "gcNumber": 51,
+          "majorGcNumber": 0,
+          "minorGcNumber": 51,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 184
+        }
+      },
+      "result": {"checksum":225452,"objects":256,"quadsPerFrame":256,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":0,"vertexHash":911260102}
+    },
+    {
+      "scene": "puzzle",
+      "load": 1024,
+      "enterMs": 49.4,
+      "exitMs": 11.29,
+      "firstFrameMs": 13.78,
+      "steady": {
+        "count": 150,
+        "mean": 12.05,
+        "min": 10.49,
+        "p50": 10.87,
+        "p95": 16.41,
+        "p99": 20.33,
+        "max": 22.73,
+        "overBudget": 5
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 11.99,
+        "min": 10.3,
+        "p50": 10.56,
+        "p95": 18.72,
+        "p99": 26.49,
+        "max": 26.49,
+        "overBudget": 3
+      },
+      "wallMs": 2173,
+      "cpuMs": 2210,
+      "cpuPerFrameMs": 12.28,
+      "peakRssKb": 47492,
+      "rssGrowthKb": 1408,
+      "gc": {
+        "collections": 4,
+        "pauseMs": 16.75,
+        "maxPauseMs": 5.948,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 47492,
+        "rssAnonKb": 32308,
+        "rssFileKb": 15184,
+        "hwmKb": 47492,
+        "pssKb": 45788,
+        "privateDirtyKb": 32528,
+        "vmSizeKb": 2440396,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 12554240.0,
+        "reservedBytes": 15204352.0,
+        "collections": 57,
+        "pauseMs": 210.5,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 12554240.0,
+          "nurseryBytes": 524288.0,
+          "totalChunks": 14,
+          "unusedChunks": 1,
+          "gcNumber": 57,
+          "majorGcNumber": 0,
+          "minorGcNumber": 57,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 210.5
+        }
+      },
+      "result": {"checksum":902057,"objects":1024,"quadsPerFrame":1024,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":0,"vertexHash":491187869}
+    },
+    {
+      "scene": "swarm",
+      "load": 50,
+      "enterMs": 5.902,
+      "exitMs": 1.5,
+      "firstFrameMs": 12.56,
+      "steady": {
+        "count": 150,
+        "mean": 0.8969,
+        "min": 0.6877,
+        "p50": 0.784,
+        "p95": 1.5,
+        "p99": 1.861,
+        "max": 2.176,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 2.292,
+        "min": 1.159,
+        "p50": 1.573,
+        "p95": 9.042,
+        "p99": 12.56,
+        "max": 12.56,
+        "overBudget": 0
+      },
+      "wallMs": 206.9,
+      "cpuMs": 252.4,
+      "cpuPerFrameMs": 1.402,
+      "peakRssKb": 47720,
+      "rssGrowthKb": 228,
+      "gc": {
+        "collections": 4,
+        "pauseMs": 9.17,
+        "maxPauseMs": 6.582,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 47720,
+        "rssAnonKb": 32536,
+        "rssFileKb": 15184,
+        "hwmKb": 47748,
+        "pssKb": 45960,
+        "privateDirtyKb": 32700,
+        "vmSizeKb": 2440396,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 12763136.0,
+        "reservedBytes": 15204352.0,
+        "collections": 61,
+        "pauseMs": 219.7,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 12763136.0,
+          "nurseryBytes": 524288.0,
+          "totalChunks": 14,
+          "unusedChunks": 1,
+          "gcNumber": 61,
+          "majorGcNumber": 0,
+          "minorGcNumber": 61,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 219.7
+        }
+      },
+      "result": {"checksum":38174.097,"objects":50,"quadsPerFrame":50,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":0,"vertexHash":59167685}
+    },
+    {
+      "scene": "swarm",
+      "load": 200,
+      "enterMs": 12.82,
+      "exitMs": 3.849,
+      "firstFrameMs": 6.97,
+      "steady": {
+        "count": 150,
+        "mean": 3.454,
+        "min": 3.108,
+        "p50": 3.318,
+        "p95": 4.423,
+        "p99": 5.187,
+        "max": 5.356,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 3.704,
+        "min": 3.253,
+        "p50": 3.362,
+        "p95": 6.97,
+        "p99": 8.353,
+        "max": 8.353,
+        "overBudget": 0
+      },
+      "wallMs": 634.4,
+      "cpuMs": 645,
+      "cpuPerFrameMs": 3.583,
+      "peakRssKb": 48616,
+      "rssGrowthKb": 896,
+      "gc": {
+        "collections": 5,
+        "pauseMs": 9.769,
+        "maxPauseMs": 4.452,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 48616,
+        "rssAnonKb": 33432,
+        "rssFileKb": 15184,
+        "hwmKb": 48616,
+        "pssKb": 46888,
+        "privateDirtyKb": 33628,
+        "vmSizeKb": 2440528,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 13025280.0,
+        "reservedBytes": 15474688.0,
+        "collections": 66,
+        "pauseMs": 229.4,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 13025280.0,
+          "nurseryBytes": 794624.0,
+          "totalChunks": 14,
+          "unusedChunks": 1,
+          "gcNumber": 66,
+          "majorGcNumber": 0,
+          "minorGcNumber": 66,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 229.4
+        }
+      },
+      "result": {"checksum":170452.808,"objects":200,"quadsPerFrame":200,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":0,"vertexHash":384141675}
+    },
+    {
+      "scene": "swarm",
+      "load": 500,
+      "enterMs": 31.64,
+      "exitMs": 8.089,
+      "firstFrameMs": 19.17,
+      "steady": {
+        "count": 150,
+        "mean": 11.11,
+        "min": 10.5,
+        "p50": 11.02,
+        "p95": 11.6,
+        "p99": 14.11,
+        "max": 14.64,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 12.05,
+        "min": 10.99,
+        "p50": 11.65,
+        "p95": 16.11,
+        "p99": 19.17,
+        "max": 19.17,
+        "overBudget": 1
+      },
+      "wallMs": 2035,
+      "cpuMs": 2043,
+      "cpuPerFrameMs": 11.35,
+      "peakRssKb": 52072,
+      "rssGrowthKb": 3456,
+      "gc": {
+        "collections": 4,
+        "pauseMs": 12.44,
+        "maxPauseMs": 4.374,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 52072,
+        "rssAnonKb": 36888,
+        "rssFileKb": 15184,
+        "hwmKb": 52072,
+        "pssKb": 50376,
+        "privateDirtyKb": 37116,
+        "vmSizeKb": 2444728,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 13594624.0,
+        "reservedBytes": 16777216.0,
+        "collections": 71,
+        "pauseMs": 249.5,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 13594624.0,
+          "nurseryBytes": 1048576.0,
+          "totalChunks": 15,
+          "unusedChunks": 1,
+          "gcNumber": 71,
+          "majorGcNumber": 0,
+          "minorGcNumber": 71,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 249.5
+        }
+      },
+      "result": {"checksum":428527.44,"objects":500,"quadsPerFrame":500,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":0,"vertexHash":810238072}
+    },
+    {
+      "scene": "ui",
+      "load": 5,
+      "enterMs": 8.256,
+      "exitMs": 2.54,
+      "firstFrameMs": 16.28,
+      "steady": {
+        "count": 150,
+        "mean": 0.9556,
+        "min": 0.7154,
+        "p50": 0.7793,
+        "p95": 1.642,
+        "p99": 2.943,
+        "max": 4.46,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 2.57,
+        "min": 1.188,
+        "p50": 1.351,
+        "p95": 4.897,
+        "p99": 16.28,
+        "max": 16.28,
+        "overBudget": 0
+      },
+      "wallMs": 223.6,
+      "cpuMs": 292.4,
+      "cpuPerFrameMs": 1.624,
+      "peakRssKb": 52328,
+      "rssGrowthKb": 256,
+      "gc": {
+        "collections": 2,
+        "pauseMs": 3.405,
+        "maxPauseMs": 2.939,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 52328,
+        "rssAnonKb": 37144,
+        "rssFileKb": 15184,
+        "hwmKb": 52328,
+        "pssKb": 50688,
+        "privateDirtyKb": 37364,
+        "vmSizeKb": 2444728,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 13660160.0,
+        "reservedBytes": 16777216.0,
+        "collections": 73,
+        "pauseMs": 252.9,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 13660160.0,
+          "nurseryBytes": 1048576.0,
+          "totalChunks": 15,
+          "unusedChunks": 1,
+          "gcNumber": 73,
+          "majorGcNumber": 0,
+          "minorGcNumber": 73,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 252.9
+        }
+      },
+      "result": {"checksum":4529,"objects":2,"quadsPerFrame":170.517,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":0,"vertexHash":254803210}
+    },
+    {
+      "scene": "ui",
+      "load": 20,
+      "enterMs": 6.459,
+      "exitMs": 1.949,
+      "firstFrameMs": 2.983,
+      "steady": {
+        "count": 150,
+        "mean": 2.79,
+        "min": 2.623,
+        "p50": 2.719,
+        "p95": 3.035,
+        "p99": 3.944,
+        "max": 3.947,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 2.814,
+        "min": 2.573,
+        "p50": 2.669,
+        "p95": 3.836,
+        "p99": 5.367,
+        "max": 5.367,
+        "overBudget": 0
+      },
+      "wallMs": 506.7,
+      "cpuMs": 508.5,
+      "cpuPerFrameMs": 2.825,
+      "peakRssKb": 53480,
+      "rssGrowthKb": 1152,
+      "gc": {
+        "collections": 6,
+        "pauseMs": 6.963,
+        "maxPauseMs": 2.35,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 53480,
+        "rssAnonKb": 38296,
+        "rssFileKb": 15184,
+        "hwmKb": 53480,
+        "pssKb": 51968,
+        "privateDirtyKb": 38644,
+        "vmSizeKb": 2445752,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 13914112.0,
+        "reservedBytes": 17825792.0,
+        "collections": 79,
+        "pauseMs": 259.9,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 13914112.0,
+          "nurseryBytes": 2097152.0,
+          "totalChunks": 15,
+          "unusedChunks": 1,
+          "gcNumber": 79,
+          "majorGcNumber": 0,
+          "minorGcNumber": 79,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 259.9
+        }
+      },
+      "result": {"checksum":23137.75,"objects":2,"quadsPerFrame":596.878,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":10,"vertexHash":254803210}
+    },
+    {
+      "scene": "ui",
+      "load": 80,
+      "enterMs": 13.1,
+      "exitMs": 4.327,
+      "firstFrameMs": 10.97,
+      "steady": {
+        "count": 150,
+        "mean": 11.44,
+        "min": 10.86,
+        "p50": 11.08,
+        "p95": 14.24,
+        "p99": 14.62,
+        "max": 15.08,
+        "overBudget": 0
+      },
+      "warmup": {
+        "count": 30,
+        "mean": 11.55,
+        "min": 10.84,
+        "p50": 11.03,
+        "p95": 14.46,
+        "p99": 19.71,
+        "max": 19.71,
+        "overBudget": 1
+      },
+      "wallMs": 2069,
+      "cpuMs": 2078,
+      "cpuPerFrameMs": 11.54,
+      "peakRssKb": 55656,
+      "rssGrowthKb": 2176,
+      "gc": {
+        "collections": 16,
+        "pauseMs": 51.96,
+        "maxPauseMs": 8.351,
+        "backgroundMs": -1
+      },
+      "memory": {
+        "rssKb": 55656,
+        "rssAnonKb": 40472,
+        "rssFileKb": 15184,
+        "hwmKb": 55656,
+        "pssKb": 54172,
+        "privateDirtyKb": 40848,
+        "vmSizeKb": 2447800,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 16084992.0,
+        "reservedBytes": 19922944.0,
+        "collections": 95,
+        "pauseMs": 311.9,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 16084992.0,
+          "nurseryBytes": 2097152.0,
+          "totalChunks": 17,
+          "unusedChunks": 1,
+          "gcNumber": 95,
+          "majorGcNumber": 0,
+          "minorGcNumber": 95,
+          "majorSlices": 0,
+          "majorPauseMs": 0,
+          "minorPauseMs": 311.9
+        }
+      },
+      "result": {"checksum":92176.5,"objects":2,"quadsPerFrame":2310.111,"trianglesPerFrame":0,"drawCallsPerFrame":1,"culledPerFrame":50,"vertexHash":254803210}
+    }
+  ],
+  "end": {
+    "memory": {
+      "rssKb": 55656,
+      "rssAnonKb": 40472,
+      "rssFileKb": 15184,
+      "hwmKb": 55656,
+      "pssKb": 54176,
+      "privateDirtyKb": 40852,
+      "vmSizeKb": 2447800,
+      "swapKb": 0,
+      "threads": 5
+    },
+    "heap": {
+      "usedBytes": 16084992.0,
+      "reservedBytes": 19922944.0,
+      "collections": 95,
+      "pauseMs": 311.9,
+      "backgroundMs": -1,
+      "raw": {
+        "bytes": 16084992.0,
+        "nurseryBytes": 2097152.0,
+        "totalChunks": 17,
+        "unusedChunks": 1,
+        "gcNumber": 95,
+        "majorGcNumber": 0,
+        "minorGcNumber": 95,
+        "majorSlices": 0,
+        "majorPauseMs": 0,
+        "minorPauseMs": 311.9
+      }
+    },
+    "usage": {
+      "userMs": 15927.1,
+      "sysMs": 535.7,
+      "minorFaults": 12118,
+      "majorFaults": 0,
+      "voluntarySwitches": 256,
+      "involuntarySwitches": 103
+    },
+    "afterGc": {
+      "memory": {
+        "rssKb": 40108,
+        "rssAnonKb": 24924,
+        "rssFileKb": 15184,
+        "hwmKb": 55912,
+        "pssKb": 38276,
+        "privateDirtyKb": 24952,
+        "vmSizeKb": 2436648,
+        "swapKb": 0,
+        "threads": 5
+      },
+      "heap": {
+        "usedBytes": 2519040.0,
+        "reservedBytes": 10485760.0,
+        "collections": 97,
+        "pauseMs": 447.8,
+        "backgroundMs": -1,
+        "raw": {
+          "bytes": 2519040.0,
+          "nurseryBytes": 2097152.0,
+          "totalChunks": 8,
+          "unusedChunks": 1,
+          "gcNumber": 96,
+          "majorGcNumber": 1,
+          "minorGcNumber": 96,
+          "majorSlices": 1,
+          "majorPauseMs": 131.5,
+          "minorPauseMs": 316.3
+        }
+      }
+    }
+  },
+  "machineEnd": {
+    "cpuFreqKHz": 1400000,
+    "temperatureC": 49.93,
+    "loadavg": "1.32 1.56 1.25 1/177 14704",
+    "memAvailableKb": 547428,
+    "throttled": 327685.0,
+    "armClockHz": 599998000.0
+  },
+  "wallMs": 16002.8
+}

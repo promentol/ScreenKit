@@ -1,0 +1,308 @@
+// The ScreenKit APK: SDL's activity, the native runtime built from
+// runtime/CMakeLists.txt, and an app package in the assets.
+//
+//   sh tools/android/android.sh build                      examples/pixi-hello bundled
+//   ./gradlew assembleDebug -Pscreenkit.app=examples/phaser-hello
+//   ./gradlew assembleDebug -Pscreenkit.app=               no bundled app; name one with the `package` extra
+//
+// Gradle on its own needs local.properties to point at CMake 3.24+ (`cmake.dir`)
+// as well as the SDK, because the NDK's own CMake is older than
+// runtime/CMakeLists.txt asks for; android.sh writes both before it builds.
+//
+// Native dependencies are the official prebuilt AARs, pinned by sha256 in
+// tools/prebuilts/manifest.json and fetched by tools/prebuilts/fetch.mjs into the
+// prebuilts cache -- never built here:
+//
+//   hermes-android   prefab hermes-engine::hermesvm   (+ libjsi.so and the JSI headers, beside it)
+//   SDL3             prefab SDL3::SDL3-shared, and org.libsdl.app.SDLActivity
+//   SDL3_ttf         prefab SDL3_ttf::SDL3_ttf-shared
+//
+// fbjni, which hermesvm links, comes from Maven Central through Gradle, checked
+// against gradle/verification-metadata.xml like every other resolved artifact.
+import groovy.json.JsonSlurper
+
+import javax.inject.Inject
+
+plugins {
+    id 'com.android.application'
+}
+
+def repoRoot = rootProject.file('../..')
+def prebuiltsManifest = new JsonSlurper().parse(new File(repoRoot, 'tools/prebuilts/manifest.json'))
+def prebuilts = System.getenv('SCREENKIT_PREBUILTS') ?: "${System.getProperty('user.home')}/.screenkit/prebuilts"
+def androidCache = { String dep -> "${prebuilts}/${dep}/${prebuiltsManifest[dep].version}/android" }
+def prebuiltAars = [
+    file("${androidCache('hermes')}/${prebuiltsManifest.hermes.android.asset}"),
+    file("${androidCache('sdl3')}/${prebuiltsManifest.sdl3.android.aar}"),
+    file("${androidCache('sdl3_ttf')}/${prebuiltsManifest.sdl3_ttf.android.aar}"),
+]
+def missing = prebuiltAars.findAll { !it.exists() }
+if (!missing.isEmpty()) {
+    throw new GradleException("prebuilt AARs missing from the cache: ${missing.join(', ')}\n" +
+        "  Run: node tools/prebuilts/fetch.mjs android-arm64 android-arm32")
+}
+
+// The app bundled into the APK, relative to the repository root: a web project
+// with a `build:screenkit` script. Empty bundles none.
+def screenkitApp = providers.gradleProperty('screenkit.app').getOrElse('examples/pixi-hello')
+
+// -Pscreenkit.netTests: also build libscreenkit-net-tests.so, the runtime's
+// networking rows cross-compiled for the device (runtime/tests/CMakeLists.txt),
+// and package it in the debug APK beside the debug-only entry point in
+// app/src/debug. Off by default, so no test code reaches an ordinary build.
+// `sh tools/android/android.sh test` is what turns it on.
+def screenkitNetTests = providers.gradleProperty('screenkit.netTests').isPresent()
+
+// -Pscreenkit.minify: run R8 over the debug build too, with the release rules.
+// There is no release build to test against, so this is how
+// proguard-rules.pro is checked: MINIFY=1 sh tools/android/android.sh test runs
+// every net row through a minified HttpClient.
+def screenkitMinify = providers.gradleProperty('screenkit.minify').isPresent()
+
+android {
+    namespace = 'dev.screenkit.host'
+    compileSdk = 35
+    // The NDK the hermes-android AAR was built with (its prefab abi.json says 27).
+    ndkVersion = '27.3.13750724'
+
+    defaultConfig {
+        applicationId = 'dev.screenkit.host'
+        // hermes-android's floor.
+        minSdk = 24
+        targetSdk = 35
+        versionCode = 1
+        versionName = new File(repoRoot, 'runtime/VERSION').text.trim()
+
+        ndk {
+            // arm64-v8a for Android TV, armeabi-v7a for Fire TV sticks, whose
+            // userland is 32-bit. x86_64 is left out (deferred-work.md).
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+        }
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_shared',                     // hermesvm's
+                          '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON',     // 16 KB pages
+                          "-DSCREENKIT_BUILD_TESTS=${screenkitNetTests ? 'ON' : 'OFF'}",
+                          // The NDK's toolchain file still asks for CMake 3.6, which
+                          // CMake 4 warns about on every configure and try-compile.
+                          '-DCMAKE_WARN_DEPRECATED=OFF',
+                          "-DSCREENKIT_PREBUILTS=${prebuilts}"
+                if (screenkitNetTests) {
+                    targets 'screenkit', 'screenkit-net-tests'
+                } else {
+                    targets 'screenkit'
+                }
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file('../../CMakeLists.txt')
+        }
+    }
+
+    buildFeatures {
+        prefab = true
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    buildTypes {
+        debug {
+            // The runtime's own code optimised, as the other hosts ship it; the
+            // Java stays debuggable.
+            externalNativeBuild {
+                cmake {
+                    arguments '-DCMAKE_BUILD_TYPE=RelWithDebInfo'
+                }
+            }
+            minifyEnabled = screenkitMinify
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            // Native code reaches Java by name, so a minified build is only as
+            // good as proguard-rules.pro -- which is why it is checked in
+            // debug (screenkit.minify) before any release build exists.
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packaging {
+        jniLibs {
+            // hermesvm and libc++_shared reach the APK twice -- from the AARs' own
+            // jni/ directories and as runtime files of the CMake target that links
+            // them. Either copy is the same library.
+            pickFirsts.addAll(['**/libc++_shared.so', '**/libhermesvm.so', '**/libfbjni.so',
+                               '**/libSDL3.so', '**/libSDL3_ttf.so', '**/libjsi.so'])
+        }
+    }
+
+    // The suite's entry point and its manifest entry are added by the same
+    // property that builds the library they drive. `src/debug` would not do:
+    // AGP merges that into every debug APK, so an ordinary build would ship an
+    // exported activity whose only purpose is to run tests -- and whose
+    // System.exit takes the app's process with it.
+    if (screenkitNetTests) {
+        sourceSets {
+            debug {
+                java.srcDirs += 'src/nettests/java'
+                manifest.srcFile 'src/nettests/AndroidManifest.xml'
+            }
+        }
+    }
+
+    androidResources {
+        // Package every file of the app package, including ones whose names start
+        // with '.' or '_', which aapt skips by default.
+        ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
+}
+
+dependencies {
+    implementation files(prebuiltAars)
+    implementation 'com.facebook.fbjni:fbjni:0.7.0'
+    // fbjni's own loader, which the activity initialises (a runtime-only
+    // dependency of fbjni's, named here so Java can compile against it).
+    implementation 'com.facebook.soloader:nativeloader:0.10.5'
+    // The platform HTTP client (spec-platform-http-clients.md): the runtime's
+    // whole network layer on Android is dev/screenkit/net/HttpClient.java over
+    // this, as React Native's NetworkingModule is. OkHttp is a Kotlin library,
+    // so kotlin-stdlib and okio come with it -- the first Kotlin in this build,
+    // and the reason settings.gradle no longer says there is none. 4.x rather
+    // than 5.x: it is the line that still supports minSdk 24 and Java 8
+    // bytecode. Every artifact is pinned by sha256 in
+    // gradle/verification-metadata.xml, which fails an unpinned dependency.
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    // The platform player behind <video> (spec-video-player.md): Media3
+    // ExoPlayer, what react-native-video uses -- HLS, DASH, progressive, and
+    // Widevine / ClearKey through MediaDrm -- driven by
+    // dev/screenkit/media/VideoPlayer.java over JNI. 1.9.4 is the newest release
+    // whose AARs build at compileSdk 35 (1.10 and 1.11 ask for 36). Media3 is
+    // AndroidX, so gradle.properties turns android.useAndroidX on; it brings
+    // androidx.annotation/core/collection, Guava and kotlin-stdlib 2.0, each
+    // pinned by sha256 in gradle/verification-metadata.xml like everything else.
+    def media3 = '1.9.4'
+    implementation "androidx.media3:media3-exoplayer:${media3}"
+    implementation "androidx.media3:media3-exoplayer-hls:${media3}"
+    implementation "androidx.media3:media3-exoplayer-dash:${media3}"
+}
+
+// ---- assets: the prelude and the bundled package ----------------------------
+//
+// The host opens both by path (runtime/host/Host.cpp is POSIX file I/O), so the
+// activity copies them out of the APK to internal storage whenever the APK
+// changes (ScreenKitActivity). Here they are compiled into assets/screenkit/.
+
+abstract class ScreenkitAssets extends DefaultTask {
+    @InputFile abstract RegularFileProperty getDomShim()
+    @InputFile abstract RegularFileProperty getFetchScript()
+    // The pinned hermesc (and every other prebuilt) version: a Hermes bump has to
+    // recompile the prelude, whose bytecode version must match the runtime's.
+    @InputFile abstract RegularFileProperty getPrebuiltsManifest()
+    // The app's directory by path, and its sources as the input: node_modules
+    // is far too big to fingerprint on every build.
+    @Optional @Input abstract Property<String> getApp()
+    @InputFiles abstract ConfigurableFileCollection getAppSources()
+    // The packager and the Vite plugin the app builds with: a change in either
+    // writes a different app.skpkg from the same app sources.
+    @InputFiles abstract ConfigurableFileCollection getPackagerSources()
+    @Input abstract Property<Boolean> getBuildApp()
+    @OutputDirectory abstract DirectoryProperty getOutputDir()
+
+    @Inject abstract ExecOperations getExec()
+    @Inject abstract FileSystemOperations getFiles()
+
+    // A command's output only when it fails: vite's and hermesc's progress would
+    // bury the build's own.
+    void quietly(String what, File dir, String... command) {
+        def output = new ByteArrayOutputStream()
+        def result = exec.exec {
+            if (dir != null) workingDir dir
+            commandLine command
+            standardOutput = output
+            errorOutput = output
+            ignoreExitValue = true
+        }
+        if (result.exitValue != 0) {
+            throw new GradleException("${what} failed (exit ${result.exitValue}):\n${output}")
+        }
+    }
+
+    @TaskAction
+    void generate() {
+        def out = new File(outputDir.get().asFile, 'screenkit')
+        files.delete { delete out }
+        out.mkdirs()
+
+        // The pinned hermesc for this machine; fetch.mjs prints its path on stdout
+        // and its progress on stderr, which is only worth showing if it fails.
+        def hermescPath = new ByteArrayOutputStream()
+        def hermescLog = new ByteArrayOutputStream()
+        def found = exec.exec {
+            commandLine 'node', fetchScript.get().asFile.path, '--hermesc'
+            standardOutput = hermescPath
+            errorOutput = hermescLog
+            ignoreExitValue = true
+        }
+        if (found.exitValue != 0) {
+            throw new GradleException("fetch.mjs --hermesc failed (exit ${found.exitValue}):\n${hermescLog}")
+        }
+        // -Xes6-block-scoping, as every compile in the tree: see runtime/CMakeLists.txt.
+        quietly('hermesc on dom-shim.js', null, hermescPath.toString().trim(), '-emit-binary', '-O',
+                '-Xes6-block-scoping', '-out', new File(out, 'dom-shim.hbc').path, domShim.get().asFile.path)
+
+        if (!app.isPresent()) return
+        def appDir = new File(app.get())
+        if (buildApp.get()) {
+            quietly("npm run build:screenkit in ${appDir}", appDir, 'npm', 'run', '--silent', 'build:screenkit')
+        }
+        def pkg = new File(appDir, 'app.skpkg')
+        if (!new File(pkg, 'manifest.json').isFile()) {
+            throw new GradleException("${appDir} built no app.skpkg -- its build:screenkit script is what writes it")
+        }
+        files.copy {
+            from pkg
+            into new File(out, 'app.skpkg')
+        }
+    }
+}
+
+def screenkitAssets = tasks.register('screenkitAssets', ScreenkitAssets) {
+    domShim = new File(repoRoot, 'runtime/js/dom-shim.js')
+    fetchScript = new File(repoRoot, 'tools/prebuilts/fetch.mjs')
+    // Through the getter: `prebuiltsManifest` alone would assign to the parsed
+    // manifest above, which is a local of this script, not this task's property.
+    getPrebuiltsManifest().set(new File(repoRoot, 'tools/prebuilts/manifest.json'))
+    packagerSources.from(fileTree(new File(repoRoot, 'packages/@screenkit')) {
+        exclude '**/node_modules/**'
+    })
+    if (screenkitApp) {
+        def appDir = new File(repoRoot, screenkitApp)
+        if (!new File(appDir, 'package.json').isFile()) {
+            throw new GradleException("screenkit.app=${screenkitApp} is not a web project (no package.json in ${appDir})")
+        }
+        app = appDir.path
+        appSources.from(fileTree(appDir) {
+            exclude 'node_modules/**', 'dist/**', 'dist-screenkit/**', 'app.skpkg/**', 'app.skpkg.js'
+        })
+    }
+    // -Pscreenkit.skipAppBuild: bundle the app.skpkg already built.
+    buildApp = !providers.gradleProperty('screenkit.skipAppBuild').isPresent()
+    outputDir = layout.buildDirectory.dir('generated/screenkit/assets')
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(screenkitAssets, { it.outputDir })
+    }
+}

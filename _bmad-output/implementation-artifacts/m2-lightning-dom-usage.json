@@ -1,0 +1,420 @@
+{
+  "files": [
+    "poc/lightning3-blits/dist/assets/index-BxQL1mK0.js"
+  ],
+  "bytes": 329851,
+  "globals": {
+    "document": {
+      "bucket": "DOM core",
+      "reads": 19,
+      "properties": {
+        "createElement": 7,
+        "getElementById": 3,
+        "documentElement": 2,
+        "querySelector": 2,
+        "querySelectorAll": 1,
+        "fonts": 1,
+        "getElementsByTagName": 1,
+        "head": 1
+      },
+      "callArguments": {
+        "createElement": [
+          "link",
+          "canvas",
+          "div"
+        ],
+        "querySelectorAll": [
+          "link[rel=\"modulepreload\"]"
+        ],
+        "getElementsByTagName": [
+          "link"
+        ],
+        "querySelector": [
+          "meta[property=csp-nonce]"
+        ]
+      }
+    },
+    "MutationObserver": {
+      "bucket": "DOM core",
+      "reads": 2,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "fetch": {
+      "bucket": "Networking",
+      "reads": 3,
+      "properties": {},
+      "callArguments": {}
+    },
+    "console": {
+      "bucket": "Console / diagnostics",
+      "reads": 44,
+      "properties": {
+        "warn": 23,
+        "error": 10,
+        "log": 5,
+        "info": 1,
+        "debug": 1
+      },
+      "callArguments": {
+        "warn": [
+          "HSL(A) color format is not supported yet",
+          "The renderer being used does not support this shader type. Breaking off registration.",
+          "ShaderType not found falling back on renderer default shader",
+          "MsdfTextRenderer is not compatible with Canvas renderer. Skipping...",
+          "No text renderers available. Your text will not render.",
+          "Text renderer cannot render font"
+        ],
+        "error": [
+          "Failed to upload texture:",
+          "Error processing textures:",
+          "Could not create WebGL Texture"
+        ]
+      }
+    },
+    "queueMicrotask": {
+      "bucket": "Timers / scheduling",
+      "reads": 6,
+      "properties": {},
+      "callArguments": {}
+    },
+    "Blob": {
+      "bucket": "Encoding / binary",
+      "reads": 5,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "ImageData": {
+      "bucket": "Canvas / graphics",
+      "reads": 3,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "clearInterval": {
+      "bucket": "Timers / scheduling",
+      "reads": 7,
+      "properties": {},
+      "callArguments": {}
+    },
+    "setInterval": {
+      "bucket": "Timers / scheduling",
+      "reads": 5,
+      "properties": {},
+      "callArguments": {}
+    },
+    "URL": {
+      "bucket": "Encoding / binary",
+      "reads": 5,
+      "properties": {
+        "revokeObjectURL": 2,
+        "createObjectURL": 1,
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "Image": {
+      "bucket": "Images / media",
+      "reads": 4,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "self": {
+      "bucket": "Window / environment",
+      "reads": 11,
+      "properties": {
+        "location": 4,
+        "postMessage": 2,
+        "WebGL2RenderingContext": 2,
+        "URL": 1,
+        "onmessage": 1,
+        "Worker": 1
+      },
+      "callArguments": {}
+    },
+    "webkitURL": {
+      "bucket": "Unclassified",
+      "reads": 1,
+      "properties": {},
+      "callArguments": {}
+    },
+    "Worker": {
+      "bucket": "Workers",
+      "reads": 1,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "XMLHttpRequest": {
+      "bucket": "Networking",
+      "reads": 3,
+      "properties": {
+        "[constructed]": 1,
+        "DONE": 1
+      },
+      "callArguments": {}
+    },
+    "createImageBitmap": {
+      "bucket": "Canvas / graphics",
+      "reads": 4,
+      "properties": {},
+      "callArguments": {}
+    },
+    "atob": {
+      "bucket": "Encoding / binary",
+      "reads": 1,
+      "properties": {},
+      "callArguments": {}
+    },
+    "WebGL2RenderingContext": {
+      "bucket": "Canvas / graphics",
+      "reads": 2,
+      "properties": {},
+      "callArguments": {}
+    },
+    "OffscreenCanvas": {
+      "bucket": "Canvas / graphics",
+      "reads": 2,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "setTimeout": {
+      "bucket": "Timers / scheduling",
+      "reads": 18,
+      "properties": {},
+      "callArguments": {}
+    },
+    "requestAnimationFrame": {
+      "bucket": "Timers / scheduling",
+      "reads": 6,
+      "properties": {},
+      "callArguments": {}
+    },
+    "performance": {
+      "bucket": "Console / diagnostics",
+      "reads": 3,
+      "properties": {
+        "now": 2
+      },
+      "callArguments": {}
+    },
+    "FontFace": {
+      "bucket": "Unclassified",
+      "reads": 1,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "window": {
+      "bucket": "Window / environment",
+      "reads": 4,
+      "properties": {
+        "devicePixelRatio": 1,
+        "removeEventListener": 1,
+        "dispatchEvent": 1
+      },
+      "callArguments": {
+        "removeEventListener": [
+          "resize"
+        ]
+      }
+    },
+    "ImageBitmap": {
+      "bucket": "Canvas / graphics",
+      "reads": 4,
+      "properties": {},
+      "callArguments": {}
+    },
+    "HTMLCanvasElement": {
+      "bucket": "Canvas / graphics",
+      "reads": 4,
+      "properties": {},
+      "callArguments": {}
+    },
+    "HTMLImageElement": {
+      "bucket": "Images / media",
+      "reads": 1,
+      "properties": {},
+      "callArguments": {}
+    },
+    "Path2D": {
+      "bucket": "Canvas / graphics",
+      "reads": 6,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "ResizeObserver": {
+      "bucket": "Unclassified",
+      "reads": 1,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "clearTimeout": {
+      "bucket": "Timers / scheduling",
+      "reads": 12,
+      "properties": {},
+      "callArguments": {}
+    },
+    "Event": {
+      "bucket": "DOM core",
+      "reads": 1,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "URLSearchParams": {
+      "bucket": "Encoding / binary",
+      "reads": 1,
+      "properties": {
+        "[constructed]": 1
+      },
+      "callArguments": {}
+    },
+    "location": {
+      "bucket": "Window / environment",
+      "reads": 3,
+      "properties": {
+        "hash": 3
+      },
+      "callArguments": {}
+    }
+  },
+  "instances": {
+    "CanvasRenderingContext2D": {
+      "members": {
+        "fillStyle": 4,
+        "fillRect": 4,
+        "fillText": 4,
+        "font": 3,
+        "drawImage": 3,
+        "globalCompositeOperation": 3,
+        "setTransform": 2,
+        "textRendering": 2,
+        "textBaseline": 2,
+        "globalAlpha": 2,
+        "imageSmoothingEnabled": 1,
+        "getImageData": 1,
+        "putImageData": 1
+      },
+      "callArguments": {}
+    },
+    "Image": {
+      "members": {
+        "onload": 2,
+        "onerror": 2,
+        "src": 2,
+        "width": 1,
+        "height": 1
+      },
+      "callArguments": {}
+    },
+    "XMLHttpRequest": {
+      "members": {
+        "status": 5,
+        "response": 3,
+        "open": 2,
+        "responseType": 2,
+        "send": 2,
+        "onload": 1,
+        "onerror": 1,
+        "onreadystatechange": 1,
+        "readyState": 1,
+        "statusText": 1
+      },
+      "callArguments": {
+        "open": [
+          "GET"
+        ]
+      }
+    },
+    "HTMLCanvasElement": {
+      "members": {
+        "getContext": 3,
+        "width": 3,
+        "height": 3
+      },
+      "callArguments": {
+        "getContext": [
+          "2d"
+        ]
+      }
+    },
+    "HTMLElement": {
+      "members": {
+        "appendChild": 1,
+        "node": 1,
+        "remove": 1,
+        "nonce": 1,
+        "getAttribute": 1
+      },
+      "callArguments": {
+        "getAttribute": [
+          "nonce"
+        ]
+      }
+    },
+    "Path2D": {
+      "members": {
+        "arcTo": 4,
+        "moveTo": 1,
+        "closePath": 1,
+        "rect": 1
+      },
+      "callArguments": {}
+    },
+    "HTMLDivElement": {
+      "members": {
+        "style": 1,
+        "id": 1,
+        "setAttribute": 1
+      },
+      "callArguments": {
+        "setAttribute": [
+          "type"
+        ]
+      }
+    },
+    "HTMLLinkElement": {
+      "members": {
+        "addEventListener": 2,
+        "rel": 1,
+        "as": 1,
+        "crossOrigin": 1,
+        "href": 1,
+        "setAttribute": 1
+      },
+      "callArguments": {
+        "setAttribute": [
+          "nonce"
+        ],
+        "addEventListener": [
+          "load",
+          "error"
+        ]
+      }
+    },
+    "Event": {
+      "members": {
+        "payload": 1,
+        "defaultPrevented": 1
+      },
+      "callArguments": {}
+    }
+  }
+}

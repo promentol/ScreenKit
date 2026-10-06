@@ -1,0 +1,28 @@
+[spidermonkey baseline] JavaScript-C128.14.0, 167.8 ms to start, RSS 16.1 MB
+[spidermonkey baseline] bulk.js: 784.6 ms, RSS 24.8 MB
+[spidermonkey baseline] workload.js: 59.3 ms, RSS 25.3 MB
+[spidermonkey baseline] sprites      100: p50    3.29 ms  p95    3.38  max    4.66 | RSS peak   25.6 MB | gc 0, 0.0 ms
+[spidermonkey baseline] sprites      400: p50   13.17 ms  p95   13.28  max   13.38 | RSS peak   25.7 MB | gc 0, 0.0 ms
+[spidermonkey baseline] sprites     1600: p50   53.40 ms  p95   53.88  max   55.50 | RSS peak   26.3 MB | gc 0, 0.0 ms
+[spidermonkey baseline] particles    250: p50    6.42 ms  p95    7.50  max    8.48 | RSS peak   26.6 MB | gc 1, 5.5 ms
+[spidermonkey baseline] particles   1000: p50   26.34 ms  p95   27.01  max   27.39 | RSS peak   26.7 MB | gc 1, 2.3 ms
+[spidermonkey baseline] particles   4000: p50  108.22 ms  p95  110.06  max  113.09 | RSS peak   27.7 MB | gc 3, 12.1 ms
+[spidermonkey baseline] platformer    10: p50    3.30 ms  p95    3.58  max    8.09 | RSS peak   31.9 MB | gc 1, 4.4 ms
+[spidermonkey baseline] platformer    50: p50    5.33 ms  p95    5.62  max    9.17 | RSS peak   35.6 MB | gc 2, 3.7 ms
+[spidermonkey baseline] platformer   200: p50   13.34 ms  p95   13.69  max   13.92 | RSS peak   40.0 MB | gc 12, 8.4 ms
+[spidermonkey baseline] shooter      100: p50    3.52 ms  p95    4.58  max    5.60 | RSS peak   39.8 MB | gc 2, 1.8 ms
+[spidermonkey baseline] shooter      400: p50   17.28 ms  p95   17.78  max   19.13 | RSS peak   41.3 MB | gc 1, 2.3 ms
+[spidermonkey baseline] shooter     1600: p50   71.43 ms  p95   72.35  max   76.79 | RSS peak   42.7 MB | gc 4, 23.7 ms
+[spidermonkey baseline] puzzle        64: p50    2.30 ms  p95    3.23  max    3.95 | RSS peak   42.9 MB | gc 0, 0.0 ms
+[spidermonkey baseline] puzzle       256: p50    9.22 ms  p95   13.35  max   17.63 | RSS peak   43.1 MB | gc 1, 4.1 ms
+[spidermonkey baseline] puzzle      1024: p50   37.72 ms  p95   56.89  max   65.53 | RSS peak   44.7 MB | gc 4, 17.8 ms
+[spidermonkey baseline] swarm         50: p50    2.76 ms  p95    2.90  max    8.65 | RSS peak   44.8 MB | gc 2, 6.5 ms
+[spidermonkey baseline] swarm        200: p50   12.06 ms  p95   12.63  max   14.23 | RSS peak   45.5 MB | gc 4, 6.3 ms
+[spidermonkey baseline] swarm        500: p50   36.80 ms  p95   42.21  max   44.94 | RSS peak   48.5 MB | gc 5, 19.0 ms
+[spidermonkey baseline] vector         3: p50   22.12 ms  p95   22.60  max   22.87 | RSS peak   48.6 MB | gc 24, 10.6 ms
+[spidermonkey baseline] vector        12: p50   88.70 ms  p95   95.38  max   98.83 | RSS peak   48.5 MB | gc 111, 36.6 ms
+[spidermonkey baseline] vector        48: p50  353.53 ms  p95  355.53  max  357.35 | RSS peak   53.0 MB | gc 445, 134.5 ms
+[spidermonkey baseline] ui             5: p50    3.45 ms  p95    4.09  max    4.97 | RSS peak   53.3 MB | gc 7, 3.7 ms
+[spidermonkey baseline] ui            20: p50   12.38 ms  p95   12.88  max   13.90 | RSS peak   55.2 MB | gc 7, 8.0 ms
+[spidermonkey baseline] ui            80: p50   48.70 ms  p95   52.57  max   54.27 | RSS peak   59.2 MB | gc 33, 105.3 ms
+report: results/sm-baseline.json

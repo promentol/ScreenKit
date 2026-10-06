@@ -1,0 +1,23 @@
+{
+  "name": "screenkit-example-pixi-hello",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "PixiJS hello world, built with Vite -- a 2D WebGL engine on ScreenKit.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:screenkit": "vite build --config vite.screenkit.config.js && screenkit bundle"
+  },
+  "dependencies": {
+    "pixi.js": "^8.20.1"
+  },
+  "devDependencies": {
+    "@screenkit/cli": "*",
+    "@screenkit/vite-plugin": "*",
+    "@vitejs/plugin-legacy": "^8.2.3",
+    "terser": "^5.51.2",
+    "vite": "^8.2.2"
+  }
+}

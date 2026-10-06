@@ -1,0 +1,24 @@
+{
+  "name": "screenkit-example-lightning3-blits",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Minimal Lightning 3 / Blits hello world -- the reference app for M6.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:screenkit": "vite build --config vite.screenkit.config.js && screenkit bundle"
+  },
+  "dependencies": {
+    "@lightningjs/blits": "^2.9.0"
+  },
+  "devDependencies": {
+    "@lightningjs/msdf-generator": "^1.3.0",
+    "@screenkit/cli": "*",
+    "@screenkit/vite-plugin": "*",
+    "@vitejs/plugin-legacy": "^7.2.1",
+    "terser": "^5.51.2",
+    "vite": "^7.0.0"
+  }
+}
