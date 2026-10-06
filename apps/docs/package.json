@@ -8,11 +8,16 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "deploy": "astro build && wrangler deploy",
+    "deploy:preview": "wrangler dev"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.2",
     "astro": "^7.3.3",
     "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "wrangler": "^4.147.0"
   }
 }

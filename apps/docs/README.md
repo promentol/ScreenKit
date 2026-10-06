@@ -3,11 +3,15 @@
 The documentation site: the developer guide and the environment reference, built with
 [Astro Starlight](https://starlight.astro.build/).
 
+**Live site:** [screenkit.bynarek.com](https://screenkit.bynarek.com) (Cloudflare Workers;
+`npm run deploy` from this package).
+
 ```sh
 npm install
 npm run dev      # http://localhost:4321
 npm run build    # -> dist/
 npm run preview  # serve the built site
+npm run deploy   # build and publish to Cloudflare Workers (see wrangler.jsonc)
 ```
 
 ## Where things live

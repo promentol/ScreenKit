@@ -3,6 +3,7 @@ dist/
 dist-screenkit/
 app.skpkg/
 .turbo/
+.wrangler/
 .astro/
 runtime/build
 

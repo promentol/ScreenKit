@@ -5,7 +5,7 @@ import starlight from '@astrojs/starlight'
 // The ScreenKit documentation site. Content lives in src/content/docs; the
 // sidebar below is the only place the order of the guide is decided.
 export default defineConfig({
-  site: 'https://screenkit.dev',
+  site: 'https://screenkit.bynarek.com',
   vite: {
     build: {
       rollupOptions: {

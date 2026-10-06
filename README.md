@@ -3,8 +3,8 @@
 Run an ordinary web build on TV hardware. Hermes, WebGL and a DOM shim over SDL3, on tvOS,
 Android TV, Fire TV and embedded Linux.
 
-Start with [`Architecture.md`](Architecture.md) for the design, or
-[`apps/docs`](apps/docs) for the developer documentation.
+Start with [`Architecture.md`](Architecture.md) for the design, or the
+[developer documentation](https://screenkit.bynarek.com) ([`apps/docs`](apps/docs) in this repo).
 
 ## Layout
 
@@ -63,6 +63,8 @@ sh tools/batocera/pi.sh run lightning3-blits   # the same for a Raspberry Pi
 
 ## Where the rules are written down
 
+- [screenkit.bynarek.com](https://screenkit.bynarek.com) — the published guide and environment
+  reference (built from [`apps/docs`](apps/docs)).
 - [`Architecture.md`](Architecture.md) — the design, the milestones, and the risks.
 - [`runtime/js/README.md`](runtime/js/README.md) — the DOM shim's contract, interface by interface.
 - [`_bmad-output/implementation-artifacts/`](_bmad-output/implementation-artifacts) — one spec per
